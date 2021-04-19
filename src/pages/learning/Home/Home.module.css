@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish&display=swap");
+
+.centerContent {
+  color: blue;
+  margin-top: 25%;
+  margin-bottom: 25%;
+  /* margin: auto; */
+}
+
+.containerCenter {
+  text-align: center;
+}
+
+.containerForm {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}

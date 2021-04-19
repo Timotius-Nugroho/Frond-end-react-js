@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish&display=swap");
+
+.centerContent {
+  margin-top: 30%;
+  margin-bottom: 30%;
+}
+
+.border {
+  border: black solid;
+}
+
+.semiTitle {
+  font-family: "Mulish", sans-serif;
+  font-size: 24px;
+  line-height: 30px;
+  color: #a0a3bd;
+}
+
+.boldTitle {
+  font-family: "Mulish", sans-serif;
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 70px;
+  color: #5f2eea;
+}
+
+.rightBold {
+  font-family: "Mulish", sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 30px;
+  margin-bottom: -8px;
+}
+
+.leftPurple {
+  font-family: "Mulish", sans-serif;
+  font-weight: bold;
+  font-size: 13px;
+  line-height: 20px;
+  letter-spacing: 0.15px;
+  color: #5f2eea;
+}
+
+.btMoon {
+  font-family: "Mulish", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 18px;
+  border: solid #5f2eea;
+  color: #5f2eea;
+  height: 35px;
+}
+
+.btMoon:hover {
+  background-color: #5f2eea;
+  border: solid #5f2eea;
+}
+
+.butCnt {
+  width: 80px;
+}
+
+.semiText {
+  font-family: "Mulish", sans-serif;
+  font-size: 14px;
+  line-height: 12px;
+  letter-spacing: 0.75px;
+  color: #6e7191;
+}
+
+.form {
+  width: 40%;
+  margin: 0 auto;
+}
+
+.btJoin {
+  width: 150px;
+  margin-left: 8px;
+}
+
+.beforeFoot {
+  margin: 0 auto;
+  width: 92%;
+}
