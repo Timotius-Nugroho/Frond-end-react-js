@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish&display=swap");
+
+.seat {
+  width: 20px;
+  height: 20px;
+  border-radius: 25%;
+}
+
+.rowSeat {
+  flex-wrap: nowrap;
+}
+
+.colSeat {
+  padding: 0 0px;
+  /* font-size: 10px; */
+}
+
+.label {
+  padding: 4px 0px 9px 0px;
+  text-align: center;
+  font-family: "Mulish", sans-serif;
+  font-size: 10px;
+  color: #6b6b6b;
+  font-weight: 600;
+}
+
+.colSeat:hover {
+  cursor: pointer;
+  border: black;
+}
+
+.seatAvailabel {
+  background-color: #d6d8e7;
+}
+
+.seatSelected {
+  background-color: #5f2eea;
+}
+
+.seatSold {
+  background-color: #6e7191;
+}

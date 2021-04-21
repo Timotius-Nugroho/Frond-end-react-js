@@ -60,3 +60,27 @@
 .cardImg {
   text-align: center;
 }
+
+.rowSeat {
+  flex-wrap: nowrap !important;
+}
+
+.colSeat {
+  padding: 0 0px;
+  /* font-size: 10px; */
+}
+
+.seat {
+  width: 20px;
+  height: 20px;
+  border-radius: 25%;
+  font-family: "Mulish", sans-serif;
+  font-size: 10px;
+  color: #6b6b6b;
+  font-weight: 600;
+}
+
+.screen {
+  width: 300px;
+  margin: auto;
+}

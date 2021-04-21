@@ -1,10 +1,25 @@
 import React, { Component } from "react";
 import { Button, Card } from "react-bootstrap";
+import { withRouter } from "react-router-dom";
 
 class Cards extends Component {
+  handleMovieDetail = (id) => {
+    // cara 1 = digunakan handling pagination, sort, search
+    // this.props.history.push(`/learning/basic-movie-detail?movieId=${id}`);
+    // cara 2 = jika datanya tidak di tampilkan di url
+    // this.props.history.push(`/learning/basic-movie-detail`, { data: id });
+    // cara 3 = bisa di gunakan untuk detail data
+    this.props.history.push(`/learning/basic-movie-detail/${id}`);
+  };
   render() {
     // console.log(this.props);
-    const { movie_name, movie_category, movie_release_date } = this.props.data;
+    const {
+      movie_id,
+      movie_name,
+      movie_category,
+      movie_release_date,
+    } = this.props.data;
+    const { handleUpdate, handleDelete, data } = this.props;
     return (
       <>
         <Card style={{ width: "18rem" }}>
@@ -16,8 +31,18 @@ class Cards extends Component {
             <Card.Title>{movie_name}</Card.Title>
             <Card.Text>{movie_release_date}</Card.Text>
             <p>{movie_category}</p>
-            <Button variant="primary">Update</Button>
-            <Button variant="danger">Delete</Button>
+            <Button
+              variant="secondary"
+              onClick={() => this.handleMovieDetail(movie_id)}
+            >
+              Detail
+            </Button>
+            <Button variant="primary" onClick={() => handleUpdate(data)}>
+              Update
+            </Button>
+            <Button variant="danger" onClick={() => handleDelete(movie_id)}>
+              Delete
+            </Button>
           </Card.Body>
         </Card>
       </>
@@ -25,4 +50,4 @@ class Cards extends Component {
   }
 }
 
-export default Cards;
+export default withRouter(Cards);
