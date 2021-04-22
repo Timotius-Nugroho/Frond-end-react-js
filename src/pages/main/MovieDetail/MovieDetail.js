@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import { Link } from "react-router-dom";
-import axios from "axios";
+import axiosApiIntances from "../../../utils/axios";
 import Footer from "../../../components/Footer/Footer";
 import { Container, Form, Row, Col, Image } from "react-bootstrap";
 import styles from "./MovieDetail.module.css";
@@ -23,14 +23,7 @@ class MovieDetail extends Component {
         movie_casts: "",
         movie_synopsis: "",
       },
-      premiere_desc: [
-        {
-          preName: "",
-          preLoc: "",
-          prePrice: "",
-          showTime: ["00:00"],
-        },
-      ],
+      premiere_desc: [],
       show_time_date: "",
       premiere_location: "",
       pagination: {},
@@ -44,8 +37,8 @@ class MovieDetail extends Component {
       prevState.premiere_location !== this.state.premiere_location ||
       prevState.show_time_date !== this.state.show_time_date
     ) {
-      console.log("udx", this.state.premiere_location);
-      console.log("udx", this.state.show_time_date);
+      // console.log("udx", this.state.premiere_location);
+      // console.log("udx", this.state.show_time_date);
 
       this.getDataPremiere();
     }
@@ -53,8 +46,8 @@ class MovieDetail extends Component {
   }
 
   componentDidMount() {
-    console.log("MOunt props id", this.props.match.params.id);
-    console.log("MOunt movie id", this.state.data.movie_id);
+    // console.log("MOunt props id", this.props.match.params.id);
+    // console.log("MOunt movie id", this.state.data.movie_id);
     this.getDataMovieDetail();
     this.getDataPremiere();
   }
@@ -62,8 +55,8 @@ class MovieDetail extends Component {
   getDataMovieDetail = () => {
     console.log("Get Data Movie detail!");
     const { movie_id } = this.state.data;
-    axios
-      .get(`http://localhost:3001/api/v1/movie/${movie_id}`)
+    axiosApiIntances
+      .get(`movie/${movie_id}`)
       .then((res) => {
         // console.log(res.data.data);
         this.setState({
@@ -91,12 +84,12 @@ class MovieDetail extends Component {
       "+",
       movie_id
     );
-    axios
+    axiosApiIntances
       .get(
-        `http://localhost:3001/api/v1/premiere/premiere-movie/${movie_id}?date=${show_time_date}&loc=${premiere_location}`
+        `premiere/premiere-movie/${movie_id}?date=${show_time_date}&loc=${premiere_location}`
       )
       .then((res) => {
-        console.log(res.data.data);
+        console.log("DATA DARI BACK END", res.data.data);
         let preData = [];
         let setData = {
           preName: "",
@@ -106,28 +99,34 @@ class MovieDetail extends Component {
         };
         const dummySetData = setData;
 
-        for (let item of res.data.data) {
-          if (
-            setData.preName === item.premiere_name &&
-            setData.preLoc === item.location_addres
-          ) {
-            console.log("skip data sama");
-            setData.showTime.push(item.show_time_clock);
-          } else {
-            preData.push(setData);
-            setData = { ...setData, ...dummySetData };
-            setData.preName = item.premiere_name;
-            setData.preLoc = item.location_addres;
-            setData.prePrice = item.premiere_price;
-            setData.showTime = [item.show_time_clock];
+        if (res.data.data.length > 0) {
+          for (let item of res.data.data) {
+            if (
+              setData.preName === item.premiere_name &&
+              setData.preLoc === item.location_addres
+            ) {
+              console.log("skip data sama");
+              setData.showTime.push([item.show_time_clock, item.show_time_id]);
+            } else {
+              preData.push(setData);
+              setData = { ...setData, ...dummySetData };
+              setData.preName = item.premiere_name;
+              setData.preLoc = item.location_addres;
+              setData.prePrice = [item.premiere_price, item.premiere_id];
+              setData.showTime = [[item.show_time_clock, item.show_time_id]];
+            }
           }
+          preData.shift();
+          preData.push(setData);
+          console.log("PREMIERE & SHOW-TIME", preData);
+          this.setState({
+            premiere_desc: preData,
+          });
+        } else {
+          this.setState({
+            premiere_desc: [],
+          });
         }
-        preData.shift();
-        preData.push(setData);
-        console.log(preData);
-        this.setState({
-          premiere_desc: preData,
-        });
       })
       .catch((err) => {
         console.log(err.response);
@@ -142,6 +141,7 @@ class MovieDetail extends Component {
 
   render() {
     const {
+      movie_id,
       movie_name,
       movie_category,
       movie_duration,
@@ -150,6 +150,8 @@ class MovieDetail extends Component {
       movie_casts,
       movie_synopsis,
     } = this.state.data;
+
+    const { premiere_desc } = this.state;
 
     // console.log("PREMDESC", this.state.premiere_desc);
     // console.log("render props id", this.props.match.params.id);
@@ -227,11 +229,17 @@ class MovieDetail extends Component {
           </Row>
           <Row>
             <Col>
-              <div className="d-flex flex-wrap justify-content-center">
-                {this.state.premiere_desc.map((e, i) => {
-                  return <Cards data={e} key={i} />;
-                })}
-              </div>
+              {premiere_desc.length > 0 ? (
+                <div className="d-flex flex-wrap justify-content-center">
+                  {premiere_desc.map((e, i) => {
+                    return <Cards data={[movie_id, e]} key={i} />;
+                  })}
+                </div>
+              ) : (
+                <p className={`${styles.semiTitleBlack} text-center`}>
+                  Premiere Not Found !
+                </p>
+              )}
             </Col>
           </Row>
         </Container>

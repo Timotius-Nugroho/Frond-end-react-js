@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 // import { Link } from "react-router-dom";
+import axiosApiIntances from "../../../utils/axios";
 import NavBar from "../../../components/NavBar/NavBar";
 import Footer from "../../../components/Footer/Footer";
 import Seat from "../../../components/Seat/Seat";
@@ -12,6 +13,11 @@ class Home extends Component {
   constructor() {
     super();
     this.state = {
+      movieName: "",
+      premiereName: "",
+      showTimeDate: "",
+      showTimeClock: "",
+      premierePrice: 0,
       selectedSeat: [],
       reservedSeat: ["A1", "A7", "A14"],
       setSeatAlphabet: ["A", "B", "C", "D", "E", "F", "G"],
@@ -19,6 +25,56 @@ class Home extends Component {
       setSeatNumberB: ["8", "9", "10", "11", "12", "13", "14"],
     };
   }
+
+  componentDidMount() {
+    const bookingInfo = JSON.parse(localStorage.getItem("bookingInfo"));
+    // console.log(bookingInfo);
+    const { movieId, premiereId, showTimeId } = bookingInfo;
+    this.getDataMovie(movieId);
+    this.getDataPremiere(premiereId);
+    this.getDataShowTime(showTimeId);
+  }
+
+  getDataMovie = (id) => {
+    axiosApiIntances
+      .get(`movie/${id}`)
+      .then((res) => {
+        this.setState({
+          movieName: res.data.data[0].movie_name,
+        });
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
+  getDataPremiere = (id) => {
+    axiosApiIntances
+      .get(`premiere/main/${id}`)
+      .then((res) => {
+        this.setState({
+          premiereName: res.data.data[0].premiere_name,
+          premierePrice: res.data.data[0].premiere_price,
+        });
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
+  getDataShowTime = (id) => {
+    axiosApiIntances
+      .get(`show_time/${id}`)
+      .then((res) => {
+        this.setState({
+          showTimeDate: new Date(res.data.data[0].show_time_date),
+          showTimeClock: res.data.data[0].show_time_clock,
+        });
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
 
   bookingSeat = (seat) => {
     let tmpSelectedSeat = this.state.selectedSeat;
@@ -48,6 +104,7 @@ class Home extends Component {
       setSeatNumberA,
       setSeatNumberB,
     } = this.state;
+    console.log(this.state);
     return (
       <>
         <NavBar />

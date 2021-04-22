@@ -28,6 +28,26 @@
   margin-bottom: 15px;
 }
 
+.clockSelected {
+  font-family: "Mulish", sans-serif;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 23px;
+  letter-spacing: 0.75px;
+  color: black;
+  margin-left: 18px;
+  margin-bottom: 15px;
+}
+
+.clockSelected:hover {
+  cursor: pointer;
+}
+
+.clock:hover {
+  cursor: pointer;
+  font-weight: bold;
+}
+
 .price {
   font-family: "Mulish", sans-serif;
   font-size: 16px;
@@ -45,6 +65,7 @@
 }
 
 .btBook {
+  width: 100%;
   font-family: "Mulish", sans-serif;
   font-weight: bold;
   font-size: 14px;
@@ -58,11 +79,7 @@
   background-color: rgba(95, 46, 234, 1);
 }
 
-.btAdd {
-  font-family: "Mulish", sans-serif;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 24px;
-  letter-spacing: 0.75px;
-  color: rgba(95, 46, 234, 1);
+.modal {
+  font-family: "Mulish", sans-serif !important;
+  margin: auto;
 }

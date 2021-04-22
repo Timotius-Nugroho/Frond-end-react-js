@@ -179,7 +179,7 @@ class Home extends Component {
               {this.state.dataMovPlayNow.map((item, index) => {
                 return (
                   <Col sm={parseInt(12 / this.state.limit)} key={index}>
-                    <Cards data={item} />
+                    <Cards className="mr-2" data={item} />
                   </Col>
                 );
               })}

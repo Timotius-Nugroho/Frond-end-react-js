@@ -26,19 +26,19 @@ class NavBarX extends Component {
             className="justify-content-between"
           >
             <Nav>
-              <Link className="ml-sm-5" to="/learning/basic-react">
-                <Nav.Link href="#Movies">
-                  <span className={styles.link}>Movies</span>
+              <Link className="ml-sm-5" to="/main/home">
+                <Nav.Link href="#Home">
+                  <span className={styles.link}>Home</span>
                 </Nav.Link>
               </Link>
-              <Link className="ml-sm-5" to="/learning/basic-home">
-                <Nav.Link href="#Cinemas">
-                  <span className={styles.link}>Cinemas</span>
+              <Link className="ml-sm-5" to="/main/payment">
+                <Nav.Link href="#Payment">
+                  <span className={styles.link}>Payment</span>
                 </Nav.Link>
               </Link>
-              <Link className="ml-sm-5" to="/learning/basic-movie-detail">
-                <Nav.Link href="#Buy Ticket">
-                  <span className={styles.link}>Buy Ticket</span>
+              <Link className="ml-sm-5" to="#">
+                <Nav.Link href="#Profile">
+                  <span className={styles.link}>Profile</span>
                 </Nav.Link>
               </Link>
             </Nav>
