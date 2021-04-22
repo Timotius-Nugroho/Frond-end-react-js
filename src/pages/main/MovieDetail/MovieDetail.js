@@ -8,13 +8,13 @@ import dummy from "../../../assets/img/g9.png";
 import line from "../../../assets/img/line_long.png";
 import Cards from "../../../components/CardBook/CardBook";
 import NavBar from "../../../components/NavBar/NavBarLogin";
-import { Prev } from "react-bootstrap/esm/PageItem";
 
 class MovieDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: {
+        movie_id: this.props.match.params.id,
         movie_name: "",
         movie_category: "",
         movie_duration: "",
@@ -46,23 +46,24 @@ class MovieDetail extends Component {
     ) {
       console.log("udx", this.state.premiere_location);
       console.log("udx", this.state.show_time_date);
-      this.getDataPremiere(
-        this.state.show_time_date,
-        this.state.premiere_location
-      );
+
+      this.getDataPremiere();
     }
     console.log("ComponentDidUPdate Running !");
   }
 
   componentDidMount() {
+    console.log("MOunt props id", this.props.match.params.id);
+    console.log("MOunt movie id", this.state.data.movie_id);
     this.getDataMovieDetail();
-    this.getDataPremiere("", "");
+    this.getDataPremiere();
   }
 
   getDataMovieDetail = () => {
     console.log("Get Data Movie detail!");
+    const { movie_id } = this.state.data;
     axios
-      .get("http://localhost:3001/api/v1/movie/1")
+      .get(`http://localhost:3001/api/v1/movie/${movie_id}`)
       .then((res) => {
         // console.log(res.data.data);
         this.setState({
@@ -77,13 +78,22 @@ class MovieDetail extends Component {
       });
   };
 
-  getDataPremiere = (date, loc) => {
-    loc = "%" + loc + "%";
-    date = "%" + date + "%";
-    console.log("Get Data Premiere!", date, "+", loc);
+  getDataPremiere = () => {
+    const { movie_id } = this.state.data;
+    let { show_time_date, premiere_location } = this.state;
+    premiere_location = "%" + premiere_location + "%";
+    show_time_date = "%" + show_time_date + "%";
+    console.log(
+      "Get Data Premiere!",
+      show_time_date,
+      "+",
+      premiere_location,
+      "+",
+      movie_id
+    );
     axios
       .get(
-        `http://localhost:3001/api/v1/premiere/premiere-movie/1?date=${date}&loc=${loc}`
+        `http://localhost:3001/api/v1/premiere/premiere-movie/${movie_id}?date=${show_time_date}&loc=${premiere_location}`
       )
       .then((res) => {
         console.log(res.data.data);
@@ -142,6 +152,7 @@ class MovieDetail extends Component {
     } = this.state.data;
 
     // console.log("PREMDESC", this.state.premiere_desc);
+    // console.log("render props id", this.props.match.params.id);
 
     return (
       <>

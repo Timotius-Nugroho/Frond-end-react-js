@@ -50,6 +50,7 @@ class Home extends Component {
     } = this.state;
     return (
       <>
+        <NavBar />
         <Container
           className={`${styles.movieBtn} d-flex flex-row justify-content-between pl-5 pr-5 pt-3 pb-3`}
           fluid
@@ -61,14 +62,19 @@ class Home extends Component {
         </Container>
         <Container className={styles.bgCnt} fluid>
           <Container className={styles.bgCnt}>
-            <Row>
-              <Col lg={8}>
+            <Row className="pb-5">
+              <Col className="pt-5" lg={8}>
                 <p className={styles.title}>Choose Your Seat</p>
-                <div className={styles.bgDiv}>
-                  <Card style={{ width: "480px" }}>
+                <div className={`${styles.bgDiv} p-5 overflow-auto`}>
+                  <Card className={styles.cardScreen}>
                     <Card.Body>
-                      <p className="text-center">screen</p>
                       <div className={styles.screen}>
+                        <p
+                          className="text-center"
+                          style={{ marginBottom: "-5px" }}
+                        >
+                          screen
+                        </p>
                         <Image src={line} fluid />
                       </div>
                       {setSeatAlphabet.map((item, index) => {
@@ -110,19 +116,39 @@ class Home extends Component {
                       </Row>
                     </Card.Body>
                     <Card.Body>
-                      <Button
-                        variant="primary"
-                        size="md"
-                        block
-                        onClick={this.booking}
-                      >
-                        Booking
-                      </Button>
+                      <p className={styles.titleSmall}>Seating Key</p>
+                      <div className="d-flex flex-row">
+                        <div
+                          className={`${styles.seat} ${styles.avaliable}`}
+                        ></div>
+                        <div className={`${styles.semi} pl-2 pr-5`}>
+                          Avaliable
+                        </div>
+                        <div
+                          className={`${styles.seat} ${styles.selected}`}
+                        ></div>
+                        <div className={`${styles.semi} pl-2 pr-5`}>
+                          Selected
+                        </div>
+                        <div className={`${styles.seat} ${styles.sold}`}></div>
+                        <div className={`${styles.semi} pl-2 pr-5`}>Sold</div>
+                      </div>
                     </Card.Body>
                   </Card>
                 </div>
+                <div className="d-flex flex-sm-row flex-column justify-content-sm-between justify-content-end mt-5">
+                  <Button
+                    className={`${styles.btPrevious} mb-3`}
+                    variant="outline-primary"
+                  >
+                    Change your Movie
+                  </Button>
+                  <Button className={styles.btPay} variant="primary">
+                    Checkout Now
+                  </Button>
+                </div>
               </Col>
-              <Col lg={4}>
+              <Col className="pt-5" lg={4}>
                 <p className={styles.title}>Order Info</p>
                 <Card
                   style={{ width: "382px", margin: "auto" }}
@@ -187,6 +213,9 @@ class Home extends Component {
               </Col>
             </Row>
           </Container>
+        </Container>
+        <Container>
+          <Footer />
         </Container>
       </>
     );

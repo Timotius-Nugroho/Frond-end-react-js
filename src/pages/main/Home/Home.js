@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import NavBar from "../../../components/NavBar/NavBar";
 import Footer from "../../../components/Footer/Footer";
 import Cards from "../../../components/Card/Cards";
+import axiosApiIntances from "../../../utils/axios";
+import ReactPaginate from "react-paginate";
 import { Button, Image, Container, Row, Col, Form } from "react-bootstrap";
 import dummy from "../../../assets/img/g9.png";
 import line from "../../../assets/img/line.png";
@@ -15,32 +17,119 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      form: {
-        movieName: "",
-        movieCategory: "",
-        movieReleaseDate: "",
-      },
-      data: ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"],
+      dataMovPlayNow: [],
+      dataMovUpcoming: [],
+      tmpDataMovUpcoming: [],
       moon: [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
+        "January 01",
+        "February 02",
+        "March 03",
+        "April 04",
+        "May 05",
+        "June 06",
+        "July 07",
+        "August 08",
+        "September 09",
+        "October 10",
+        "November 11",
+        "December 12",
       ],
       pagination: {},
       page: 1,
-      limit: 3,
+      limit: 4,
+      isShowView1: false,
     };
   }
+
+  componentDidMount() {
+    console.log("ComponentDidMount Running !");
+    this.getDataMovieUpcoming(1, 9, "movie_release_date DESC");
+    this.getDataMoviePlayNow(
+      this.state.page,
+      this.state.limit,
+      "movie_release_date DESC"
+    );
+  }
+
+  getDataMovieUpcoming = (page, limit, sort) => {
+    console.log("Get Data !");
+    axiosApiIntances
+      .get(`movie?page=${page}&limit=${limit}&sort=${sort}`)
+      .then((res) => {
+        // console.log(res);
+        this.setState({
+          dataMovUpcoming: res.data.data,
+          tmpDataMovUpcoming: res.data.data,
+        });
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
+  getDataMoviePlayNow = (page, limit, sort) => {
+    console.log("Get Data !");
+    axiosApiIntances
+      .get(`movie?page=${page}&limit=${limit}&sort=${sort}`)
+      .then((res) => {
+        // console.log(res);
+        this.setState({
+          dataMovPlayNow: res.data.data,
+          pagination: res.data.pagination,
+        });
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
+  handleMoon = (moon) => {
+    // console.log("BT-MOOON-", moon);
+    const { dataMovUpcoming } = this.state;
+    const filterTmp = dataMovUpcoming.filter(
+      (e) => e.movie_release_date.split("-")[1] === moon
+    );
+    this.setState({
+      tmpDataMovUpcoming: filterTmp,
+    });
+    // console.log(filterTmp);
+  };
+
+  handleView2 = () => {
+    // console.log("view all 2");
+    this.setState({
+      tmpDataMovUpcoming: this.state.dataMovUpcoming,
+    });
+  };
+
+  handleView1 = () => {
+    let { isShowView1 } = this.state;
+    isShowView1 ? (isShowView1 = false) : (isShowView1 = true);
+    this.setState({
+      isShowView1: isShowView1,
+    });
+  };
+
+  handleBanner = (id) => {
+    console.log(id);
+    this.props.history.push(`/main/movie-detail/${id}`);
+  };
+
+  handlePageClick = (event) => {
+    const selectedPage = event.selected + 1;
+    this.setState({ page: selectedPage }, () => {
+      this.getDataMoviePlayNow(
+        this.state.page,
+        this.state.limit,
+        "movie_release_date DESC"
+      );
+    });
+  };
+
   render() {
+    // console.log("DataMovUpcoming", typeof parseInt(this.state.limit));
+    // console.log("DataMovUpcoming", this.state.dataMovUpcoming);
+    // console.log("tmpDataMovUpcoming", this.state.tmpDataMovUpcoming);
     return (
       <>
         <NavBar />
@@ -72,22 +161,67 @@ class Home extends Component {
               </div>
             </Col>
             <Col className="text-sm-right text-center" sm={6}>
-              <p className={styles.leftPurple}>View all</p>
+              <p
+                className={styles.leftPurple}
+                onClick={() => this.handleView1()}
+              >
+                {this.state.isShowView1 ? (
+                  <span>View less</span>
+                ) : (
+                  <span>View all</span>
+                )}
+              </p>
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <div className="ml-2 overflow-auto d-flex flex-row">
-                {this.state.data.map((item, index) => {
-                  return (
-                    <div className="p-3 bd-highlight" key={index}>
-                      <img src={dummy} alt="..." />
-                    </div>
-                  );
-                })}
-              </div>
-            </Col>
-          </Row>
+
+          {this.state.isShowView1 ? (
+            <Row className="ml-2 mt-3">
+              {this.state.dataMovPlayNow.map((item, index) => {
+                return (
+                  <Col sm={parseInt(12 / this.state.limit)} key={index}>
+                    <Cards data={item} />
+                  </Col>
+                );
+              })}
+            </Row>
+          ) : (
+            <Row>
+              <Col>
+                <div className="ml-2 overflow-auto d-flex flex-row">
+                  {this.state.dataMovUpcoming.map((item, index) => {
+                    return (
+                      <div
+                        className="p-3 bd-highlight"
+                        key={index}
+                        onClick={() => this.handleBanner(item.movie_id)}
+                      >
+                        <img className={styles.banner} src={dummy} alt="..." />
+                      </div>
+                    );
+                  })}
+                </div>
+              </Col>
+            </Row>
+          )}
+          {this.state.isShowView1 ? (
+            <Row className="mt-3">
+              <ReactPaginate
+                previousLabel={"prev"}
+                nextLabel={"next"}
+                breakLabel={"..."}
+                breakClassName={"break-me"}
+                pageCount={this.state.pagination.totalPage}
+                marginPagesDisplayed={5}
+                pageRangeDisplayed={5}
+                onPageChange={this.handlePageClick}
+                containerClassName={styles.pagination}
+                subContainerClassName={`${styles.pages} ${styles.pagination}`}
+                activeClassName={styles.active}
+              />
+            </Row>
+          ) : (
+            ""
+          )}
         </Container>
         <Container fluid className="pl-5">
           <Row className="mt-5 ml-2 mr-2">
@@ -98,7 +232,17 @@ class Home extends Component {
               </div>
             </Col>
             <Col className="text-sm-right text-center" sm={6}>
-              <p className={styles.leftPurple}>View all</p>
+              {this.state.tmpDataMovUpcoming.length !==
+              this.state.dataMovUpcoming.length ? (
+                <p
+                  className={styles.leftPurple}
+                  onClick={() => this.handleView2()}
+                >
+                  View all
+                </p>
+              ) : (
+                ""
+              )}
             </Col>
           </Row>
           <Row className="mb-2">
@@ -110,8 +254,9 @@ class Home extends Component {
                       className={`${styles.btMoon} m-2`}
                       variant="outline-primary"
                       key={index}
+                      onClick={() => this.handleMoon(item.split(" ")[1])}
                     >
-                      <div className={styles.butCnt}>{item}</div>
+                      <div className={styles.butCnt}>{item.split(" ")[0]}</div>
                     </Button>
                   );
                 })}
@@ -121,18 +266,17 @@ class Home extends Component {
           <Row>
             <Col>
               <div className="ml-3 overflow-auto d-flex flex-row">
-                {this.state.data.map((item, index) => {
-                  return (
-                    <div className="p-3 shadow" key={index}>
-                      <Cards
-                        data={{
-                          movie_name: "John Wick",
-                          movie_category: `Action ${item}`,
-                        }}
-                      />
-                    </div>
-                  );
-                })}
+                {this.state.tmpDataMovUpcoming.length > 0 ? (
+                  this.state.tmpDataMovUpcoming.map((item, index) => {
+                    return (
+                      <div className="p-3 shadow" key={index}>
+                        <Cards data={item} />
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className={styles.notFound}>Movie Not Found !!!</p>
+                )}
               </div>
             </Col>
           </Row>

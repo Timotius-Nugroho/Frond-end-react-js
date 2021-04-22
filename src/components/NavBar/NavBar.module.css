@@ -13,3 +13,8 @@
   color: white;
   background-color: rgba(95, 46, 234, 1);
 }
+
+.search:hover {
+  cursor: pointer;
+  width: 15px;
+}

@@ -33,7 +33,7 @@ class Seat extends Component {
       <>
         <Row className={styles.rowSeat}>
           <Col className={styles.colSeat}>
-            <div className={styles.label}>{seatAlphabet}</div>
+            <div className={styles.label}>{`${seatAlphabet} `}</div>
           </Col>
           {this.state.seatA.map((item, index) => {
             return (
