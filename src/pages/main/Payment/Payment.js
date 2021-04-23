@@ -73,6 +73,7 @@ class Payment extends Component {
           modalMsg: "Booking Succes !",
           showModal: true,
         });
+        localStorage.removeItem("bookingInfo");
         setTimeout(() => {
           this.setState({ showModal: false });
           this.props.history.push(`/main/home`);
@@ -113,7 +114,18 @@ class Payment extends Component {
         bookingSeat: selectedSeat,
       };
       console.log(dataBook);
-      this.postBookingData(dataBook);
+      if (selectedSeat.length === 0) {
+        this.setState({
+          modalMsg: "Booking Failed, Data Movie is Empty !",
+          showModal: true,
+        });
+        setTimeout(() => {
+          this.setState({ showModal: false });
+          this.props.history.push(`/main/home`);
+        }, 2000);
+      } else {
+        this.postBookingData(dataBook);
+      }
     } else {
       this.setState({
         showModal: true,
