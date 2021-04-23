@@ -27,19 +27,19 @@ class NavBarX extends Component {
           >
             <Nav>
               <Link className="ml-sm-5" to="/main/home">
-                <Nav.Link href="#Home">
-                  <span className={styles.link}>Home</span>
-                </Nav.Link>
+                {/* <Nav.Link href="#Home"> */}
+                <span className={styles.link}>Home</span>
+                {/* </Nav.Link> */}
               </Link>
               <Link className="ml-sm-5" to="/main/payment">
-                <Nav.Link href="#Payment">
-                  <span className={styles.link}>Payment</span>
-                </Nav.Link>
+                {/* <Nav.Link href="#Payment"> */}
+                <span className={styles.link}>Payment</span>
+                {/* </Nav.Link> */}
               </Link>
-              <Link className="ml-sm-5" to="#">
-                <Nav.Link href="#Profile">
-                  <span className={styles.link}>Profile</span>
-                </Nav.Link>
+              <Link className="ml-sm-5" to="/main/payment">
+                {/* <Nav.Link href="#Profile"> */}
+                <span className={styles.link}>Profile</span>
+                {/* </Nav.Link> */}
               </Link>
             </Nav>
             <Nav>

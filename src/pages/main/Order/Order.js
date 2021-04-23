@@ -1,10 +1,19 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axiosApiIntances from "../../../utils/axios";
+import Moment from "react-moment";
 import NavBar from "../../../components/NavBar/NavBar";
 import Footer from "../../../components/Footer/Footer";
 import Seat from "../../../components/Seat/Seat";
-import { Button, Image, Container, Row, Col, Card } from "react-bootstrap";
+import {
+  Button,
+  Image,
+  Container,
+  Row,
+  Col,
+  Card,
+  Modal,
+} from "react-bootstrap";
 import styles from "./Order.module.css";
 import dummyPremiere from "../../../assets/img/logo_2.png";
 import line from "../../../assets/img/line_order.png";
@@ -19,10 +28,11 @@ class Home extends Component {
       showTimeClock: "",
       premierePrice: 0,
       selectedSeat: [],
-      reservedSeat: ["A1", "A7", "A14"],
+      reservedSeat: [],
       setSeatAlphabet: ["A", "B", "C", "D", "E", "F", "G"],
       setSeatNumberA: ["1", "2", "3", "4", "5", "6", "7"],
       setSeatNumberB: ["8", "9", "10", "11", "12", "13", "14"],
+      show: false,
     };
   }
 
@@ -33,6 +43,7 @@ class Home extends Component {
     this.getDataMovie(movieId);
     this.getDataPremiere(premiereId);
     this.getDataShowTime(showTimeId);
+    this.getDataSeat(premiereId, showTimeId);
   }
 
   getDataMovie = (id) => {
@@ -67,8 +78,28 @@ class Home extends Component {
       .get(`show_time/${id}`)
       .then((res) => {
         this.setState({
-          showTimeDate: new Date(res.data.data[0].show_time_date),
+          showTimeDate: res.data.data[0].show_time_date,
           showTimeClock: res.data.data[0].show_time_clock,
+        });
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
+  getDataSeat = (preId, showId) => {
+    axiosApiIntances
+      .get(`booking/book-seat?premiereId=${preId}&showTimeId=${showId}`)
+      .then((res) => {
+        // console.log("Seat INfo", res.data.data);
+        let reservedSeat = [];
+        res.data.data.map((e) => {
+          reservedSeat.push(e.booking_seat_location);
+          return true;
+        });
+        console.log("Seat SOLD", reservedSeat);
+        this.setState({
+          reservedSeat: reservedSeat,
         });
       })
       .catch((err) => {
@@ -96,6 +127,42 @@ class Home extends Component {
     }
   };
 
+  handleCheckOut = () => {
+    console.log("Check Out");
+    const {
+      selectedSeat,
+      movieName,
+      premiereName,
+      showTimeDate,
+      showTimeClock,
+      premierePrice,
+    } = this.state;
+    if (selectedSeat.length > 0) {
+      const bookingInfo = JSON.parse(localStorage.getItem("bookingInfo"));
+      const newBookingInfo = JSON.stringify({
+        ...bookingInfo,
+        selectedSeat: selectedSeat,
+        movieName: movieName,
+        premiereName: premiereName,
+        showTimeDate: showTimeDate,
+        showTimeClock: showTimeClock,
+        premierePrice: premierePrice,
+      });
+      localStorage.setItem("bookingInfo", newBookingInfo);
+      this.props.history.push(`/main/payment`);
+    } else {
+      this.setState({
+        show: true,
+      });
+    }
+  };
+
+  handleClose = () => {
+    this.setState({
+      show: false,
+    });
+  };
+
   render() {
     const {
       reservedSeat,
@@ -103,18 +170,32 @@ class Home extends Component {
       setSeatAlphabet,
       setSeatNumberA,
       setSeatNumberB,
+      movieName,
+      premiereName,
+      showTimeDate,
+      showTimeClock,
+      premierePrice,
+      show,
     } = this.state;
     console.log(this.state);
+
     return (
       <>
+        <Modal show={show} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title className={styles.modal}>
+              Please select your seat
+            </Modal.Title>
+          </Modal.Header>
+        </Modal>
         <NavBar />
         <Container
           className={`${styles.movieBtn} d-flex flex-row justify-content-between pl-5 pr-5 pt-3 pb-3`}
           fluid
         >
-          <p className={styles.textMovieBtn}>MovieName</p>
+          <p className={styles.textMovieBtn}>{movieName}</p>
           <Button className={styles.changeMovieBtn} variant="light">
-            Change movie
+            <Link to="/main/home">Change movie</Link>
           </Button>
         </Container>
         <Container className={styles.bgCnt} fluid>
@@ -198,9 +279,15 @@ class Home extends Component {
                     className={`${styles.btPrevious} mb-3`}
                     variant="outline-primary"
                   >
-                    Change your Movie
+                    <Link to="/main/home">Change your Movie</Link>
                   </Button>
-                  <Button className={styles.btPay} variant="primary">
+                  <Button
+                    className={styles.btPay}
+                    variant="primary"
+                    onClick={() => {
+                      this.handleCheckOut();
+                    }}
+                  >
                     Checkout Now
                   </Button>
                 </div>
@@ -211,60 +298,58 @@ class Home extends Component {
                   style={{ width: "382px", margin: "auto" }}
                   className="shadow"
                 >
-                  <Card.Body>
-                    <Card.Text className="pb-3 mt-3">
-                      <div className={styles.cardImg}>
-                        <Image src={dummyPremiere} style={{ width: "120px" }} />
-                        <p className={`${styles.titleSmall} pt-2`}>
-                          premiereName <span>Cinema</span>
-                        </p>
-                      </div>
-                      <div className="d-flex flex-row justify-content-between">
-                        <p className={styles.semi}>Movie selected</p>
-                        <p className={styles.semi} style={{ color: "black" }}>
-                          movieName
-                        </p>
-                      </div>
-                      <div className="d-flex flex-row justify-content-between">
-                        <p className={styles.semi}>showTimeDate</p>
-                        <p className={styles.semi} style={{ color: "black" }}>
-                          showTimeClock
-                        </p>
-                      </div>
-                      <div className="d-flex flex-row justify-content-between">
-                        <p className={styles.semi}>One ticket price</p>
-                        <p className={styles.semi} style={{ color: "black" }}>
-                          <span>$</span>
-                          premierePirce
-                        </p>
-                      </div>
-                      <div className="d-flex flex-row justify-content-between">
-                        <p className={styles.semi}>Seat choosed</p>
-                        <p className={styles.semi} style={{ color: "black" }}>
-                          {this.state.selectedSeat.map((item, index) => {
-                            return <span key={index}>{`${item}, `}</span>;
-                          })}
-                        </p>
-                      </div>
-                    </Card.Text>
+                  <Card.Body className="pb-3 mt-3">
+                    <div className={styles.cardImg}>
+                      <Image src={dummyPremiere} style={{ width: "120px" }} />
+                      <p className={`${styles.titleSmall} pt-2`}>
+                        {premiereName} <span>Cinema</span>
+                      </p>
+                    </div>
+                    <div className="d-flex flex-row justify-content-between">
+                      <p className={styles.semi}>Movie selected</p>
+                      <p className={styles.semi} style={{ color: "black" }}>
+                        {movieName}
+                      </p>
+                    </div>
+                    <div className="d-flex flex-row justify-content-between">
+                      <p className={styles.semi}>
+                        <Moment format="dddd, LL">{showTimeDate}</Moment>
+                      </p>
+                      <p className={styles.semi} style={{ color: "black" }}>
+                        {showTimeClock}
+                      </p>
+                    </div>
+                    <div className="d-flex flex-row justify-content-between">
+                      <p className={styles.semi}>One ticket price</p>
+                      <p className={styles.semi} style={{ color: "black" }}>
+                        <span>$</span>
+                        {premierePrice}
+                      </p>
+                    </div>
+                    <div className="d-flex flex-row justify-content-between">
+                      <p className={styles.semi}>Seat choosed</p>
+                      <p className={styles.semi} style={{ color: "black" }}>
+                        {selectedSeat.map((item, index) => {
+                          return <span key={index}>{`${item}, `}</span>;
+                        })}
+                      </p>
+                    </div>
                     <hr />
-                    <Card.Text>
-                      <div className="d-flex flex-row justify-content-between">
-                        <p
-                          className={styles.titleSmall}
-                          style={{ fontWeight: "600" }}
-                        >
-                          Total payment
-                        </p>
-                        <p
-                          className={styles.titleSmall}
-                          style={{ fontWeight: "600", color: "#5F2EEA" }}
-                        >
-                          <span>$</span>
-                          bookingTotalPrice
-                        </p>
-                      </div>
-                    </Card.Text>
+                    <div className="d-flex flex-row justify-content-between">
+                      <p
+                        className={styles.titleSmall}
+                        style={{ fontWeight: "600" }}
+                      >
+                        Total payment
+                      </p>
+                      <p
+                        className={styles.titleSmall}
+                        style={{ fontWeight: "600", color: "#5F2EEA" }}
+                      >
+                        <span>$</span>
+                        {selectedSeat.length * premierePrice}
+                      </p>
+                    </div>
                   </Card.Body>
                 </Card>
               </Col>

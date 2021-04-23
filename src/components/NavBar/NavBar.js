@@ -83,7 +83,7 @@ class NavBarX extends Component {
           variant="light"
           sticky="top"
         >
-          <Navbar.Brand href="#">
+          <Navbar.Brand>
             <Image src={logo} fluid />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -92,20 +92,14 @@ class NavBarX extends Component {
             className="justify-content-between"
           >
             <Nav>
-              <Link className="ml-sm-5" to="/main/home">
-                <Nav.Link href="#Home">
-                  <span className={styles.link}>Home</span>
-                </Nav.Link>
+              <Link className="ml-sm-5 mr-2" to="/main/home">
+                <span className={styles.link}>Home</span>
               </Link>
-              <Link className="ml-sm-5" to="/main/payment">
-                <Nav.Link href="#Payment">
-                  <span className={styles.link}>Payment</span>
-                </Nav.Link>
+              <Link className="ml-sm-5 mr-2" to="/main/payment">
+                <span className={styles.link}>Payment</span>
               </Link>
-              <Link className="ml-sm-5" to="#">
-                <Nav.Link href="#Profile">
-                  <span className={styles.link}>Profile</span>
-                </Nav.Link>
+              <Link className="ml-sm-5 mr-2" to="#">
+                <span className={styles.link}>Profile</span>
               </Link>
             </Nav>
             <Nav>
@@ -115,7 +109,7 @@ class NavBarX extends Component {
               <div className="mr-sm-4 mt-3" onClick={this.handleShow}>
                 <Search className={styles.search} />
               </div>
-              <Modal show={isShow} onHide={this.handleClose}>
+              <Modal animation={false} show={isShow} onHide={this.handleClose}>
                 <Modal.Header closeButton>
                   <Modal.Title className={styles.rightBold}>
                     Movie Search

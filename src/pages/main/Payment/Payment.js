@@ -2,7 +2,18 @@ import React, { Component } from "react";
 // import { Link } from "react-router-dom";
 import Footer from "../../../components/Footer/Footer";
 import NavBar from "../../../components/NavBar/NavBarLogin";
-import { Container, Form, Row, Col, Image, Button } from "react-bootstrap";
+import axiosApiIntances from "../../../utils/axios";
+import {
+  Container,
+  Form,
+  Row,
+  Col,
+  Image,
+  Button,
+  Modal,
+} from "react-bootstrap";
+import { Link } from "react-router-dom";
+import Moment from "react-moment";
 import styles from "./Payment.module.css";
 import line from "../../../assets/img/line_long.png";
 import bca from "../../../assets/img/bca.png";
@@ -19,21 +30,127 @@ class Payment extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      form: {
-        movieName: "",
-        movieCategory: "",
-        movieReleaseDate: "",
-      },
-      data: [],
-      pagination: {},
-      page: 1,
-      limit: 3,
+      movieName: "",
+      premiereId: 0,
+      premiereName: "",
+      premierePrice: 0,
+      selectedSeat: [],
+      showTimeClock: "",
+      showTimeDate: "2021-01-01",
+      showTimeId: "",
+      paymentMethod: "",
+      showModal: false,
+      modalMsg: "Please select your payment method !",
+      listPaymentMethod1: [
+        [gpay, "gpay"],
+        [visa, "visa"],
+        [gopay, "gopay"],
+        [paypal, "paypal"],
+      ],
+      listPaymentMethod2: [
+        [dana, "dana"],
+        [bca, "Bank BCA"],
+        [bri, "Bank BRI"],
+        [ovo, "ovo"],
+      ],
     };
   }
 
+  componentDidMount() {
+    const bookingInfo = JSON.parse(localStorage.getItem("bookingInfo"));
+    this.setState({
+      ...this.state,
+      ...bookingInfo,
+    });
+  }
+
+  postBookingData = (data) => {
+    axiosApiIntances
+      .post("booking/book", data)
+      .then((res) => {
+        console.log(res);
+        this.setState({
+          modalMsg: "Booking Succes !",
+          showModal: true,
+        });
+        setTimeout(() => {
+          this.setState({ showModal: false });
+          this.props.history.push(`/main/home`);
+        }, 2000);
+      })
+      .catch((err) => {
+        console.log(err.response);
+        this.setState({
+          modalMsg: "Booking Failed !",
+          showModal: true,
+        });
+      });
+  };
+
+  handlePayment = (method) => {
+    this.setState({
+      paymentMethod: method,
+    });
+  };
+
+  handlePayOrder = () => {
+    const {
+      premiereId,
+      showTimeId,
+      selectedSeat,
+      premierePrice,
+      paymentMethod,
+    } = this.state;
+
+    if (paymentMethod !== "") {
+      const dataBook = {
+        premiere_id: premiereId,
+        show_time_id: showTimeId,
+        booking_ticket: selectedSeat.length,
+        booking_total_price: selectedSeat.length * premierePrice,
+        booking_payment_method: paymentMethod,
+        booking_status: "succes",
+        bookingSeat: selectedSeat,
+      };
+      console.log(dataBook);
+      this.postBookingData(dataBook);
+    } else {
+      this.setState({
+        showModal: true,
+      });
+    }
+  };
+
+  handleClose = () => {
+    this.setState({
+      showModal: false,
+    });
+  };
+
   render() {
+    const {
+      movieName,
+      premiereName,
+      premierePrice,
+      selectedSeat,
+      showTimeClock,
+      showTimeDate,
+      listPaymentMethod1,
+      listPaymentMethod2,
+      paymentMethod,
+      showModal,
+      modalMsg,
+    } = this.state;
+
+    // console.log(this.state);
+    // console.log(paypal);
     return (
       <>
+        <Modal show={showModal} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title className={styles.modal}>{modalMsg}</Modal.Title>
+          </Modal.Header>
+        </Modal>
         <NavBar />
         <Container className={styles.bgCnt} fluid>
           <Container className={`${styles.bgCnt} pt-5 pb-5`}>
@@ -46,101 +163,80 @@ class Payment extends Component {
                     <div className="d-flex flex-row justify-content-between">
                       <p className={styles.semi}>Date & time</p>
                       <p className={styles.normal}>
-                        <span>date</span> at <span>time</span>
+                        <span>
+                          <Moment format="dddd, LL">{showTimeDate}</Moment>
+                        </span>{" "}
+                        at <span>{showTimeClock}</span>
                       </p>
                     </div>
                     <hr />
                     <div className="d-flex flex-row justify-content-between">
                       <p className={styles.semi}>Movie title</p>
-                      <p className={styles.normal}>movieName</p>
+                      <p className={styles.normal}>{movieName}</p>
                     </div>
                     <hr />
                     <div className="d-flex flex-row justify-content-between">
                       <p className={styles.semi}>Cinema name</p>
-                      <p className={styles.normal}>premiereName</p>
+                      <p className={styles.normal}>{premiereName}</p>
                     </div>
                     <hr />
                     <div className="d-flex flex-row justify-content-between">
                       <p className={styles.semi}>Number of tickets</p>
-                      <p className={styles.normal}>booking_ticket</p>
+                      <p className={styles.normal}>{selectedSeat.length}</p>
                     </div>
                     <hr />
                     <div className="d-flex flex-row justify-content-between">
                       <p className={styles.semi}>Total Payment</p>
                       <p className={styles.price}>
-                        <span>$</span>bookingTotalPrice<span>,00</span>
+                        <span>$</span>
+                        {selectedSeat.length * premierePrice}
+                        <span>,00</span>
                       </p>
                     </div>
                   </div>
                   <p className={styles.title}>Choose a Payment Method</p>
                   <div className={`${styles.bgDiv} p-5 mb-4`}>
                     <Row className="mb-4">
-                      <Col>
-                        <Button
-                          className={styles.btnPayment}
-                          variant="outline-secondary"
-                        >
-                          <Image src={gpay} fluid />
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button
-                          className={styles.btnPayment}
-                          variant="outline-secondary"
-                        >
-                          <Image src={visa} fluid />
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button
-                          className={styles.btnPayment}
-                          variant="outline-secondary"
-                        >
-                          <Image src={gopay} fluid />
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button
-                          className={styles.btnPayment}
-                          variant="outline-secondary"
-                        >
-                          <Image src={paypal} fluid />
-                        </Button>
-                      </Col>
+                      {listPaymentMethod1.map((item, index) => {
+                        return (
+                          <Col key={index}>
+                            <Button
+                              className={`${styles.btnPayment} ${
+                                paymentMethod === item[1]
+                                  ? styles.btnPaymentSelect
+                                  : ""
+                              }`}
+                              variant="outline-secondary"
+                              onClick={() => {
+                                this.handlePayment(item[1]);
+                              }}
+                            >
+                              <Image src={item[0]} fluid />
+                            </Button>
+                          </Col>
+                        );
+                      })}
                     </Row>
                     <Row className="mb-4">
-                      <Col>
-                        <Button
-                          className={styles.btnPayment}
-                          variant="outline-secondary"
-                        >
-                          <Image src={dana} fluid />
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button
-                          className={styles.btnPayment}
-                          variant="outline-secondary"
-                        >
-                          <Image src={bca} fluid />
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button
-                          className={styles.btnPayment}
-                          variant="outline-secondary"
-                        >
-                          <Image src={bri} fluid />
-                        </Button>
-                      </Col>
-                      <Col>
-                        <Button
-                          className={styles.btnPayment}
-                          variant="outline-secondary"
-                        >
-                          <Image src={ovo} fluid />
-                        </Button>
-                      </Col>
+                      {listPaymentMethod2.map((item, index) => {
+                        return (
+                          <Col key={index}>
+                            <Button
+                              className={`${styles.btnPayment} ${
+                                paymentMethod === item[1]
+                                  ? styles.btnPaymentSelect
+                                  : ""
+                              }`}
+                              variant="outline-secondary"
+                              onClick={() => {
+                                this.handlePayment(item[1]);
+                              }}
+                            >
+                              <Image src={item[0]} fluid />
+                            </Button>
+                          </Col>
+                        );
+                      })}
                     </Row>
                     <div className="d-flex flex-row justify-content-center mb-4">
                       <div>
@@ -166,9 +262,15 @@ class Payment extends Component {
                       className={`${styles.btPrevious} mb-3`}
                       variant="outline-primary"
                     >
-                      Previous step
+                      <Link to="/main/order">Previous step</Link>
                     </Button>
-                    <Button className={styles.btPay} variant="primary">
+                    <Button
+                      className={styles.btPay}
+                      variant="primary"
+                      onClick={() => {
+                        this.handlePayOrder();
+                      }}
+                    >
                       Pay your order
                     </Button>
                   </div>

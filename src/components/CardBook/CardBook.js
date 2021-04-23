@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button, Card, Image, Modal } from "react-bootstrap";
+import { withRouter } from "react-router-dom";
 import dummy from "../../assets/img/logo_2.png";
 import styles from "./CardBook.module.css";
 
@@ -49,6 +50,7 @@ class Cards extends Component {
         showTimeId: showTimeId,
       });
       localStorage.setItem("bookingInfo", booking);
+      this.props.history.push(`/main/order`);
     } else {
       this.setState({
         show: true,
@@ -130,4 +132,4 @@ class Cards extends Component {
   }
 }
 
-export default Cards;
+export default withRouter(Cards);

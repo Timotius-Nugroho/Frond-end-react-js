@@ -26,8 +26,8 @@
 
 .normal {
   font-family: "Mulish", sans-serif;
-  font-size: 20px;
-  line-height: 25px;
+  font-size: 15px;
+  line-height: 18px;
   letter-spacing: 0.25px;
 }
 
@@ -50,6 +50,10 @@
 .btnPayment {
   height: 56px;
   width: 85%;
+}
+
+.btnPaymentSelect {
+  background-color: rgba(244, 183, 64, 0.8) !important;
 }
 
 @media (max-width: 991.98px) {

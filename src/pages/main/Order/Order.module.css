@@ -167,3 +167,8 @@
 .btPrevious:hover {
   background-color: #5f2eea;
 }
+
+.modal {
+  font-family: "Mulish", sans-serif !important;
+  margin: auto;
+}
