@@ -45,4 +45,4 @@ REACT_APP_ENDPOINT = [Backend API]
 
 ## License
 
-© [Bagus Tri Harjanto](https://github.com/Timotius-Nugroho/)
+© [Timotius Nugroho](https://github.com/Timotius-Nugroho/)
