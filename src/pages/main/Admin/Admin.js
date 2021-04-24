@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
 import Footer from "../../../components/Footer/Footer";
-import NavBar from "../../../components/NavBar/NavBarLogin";
+import NavBar from "../../../components/NavBar/NavBarAdmin";
 import Card from "../../../components/CardCrud/CardCrud";
 import axiosApiIntances from "../../../utils/axios";
 import {
@@ -282,7 +282,7 @@ class MovieDetail extends Component {
       movieSynopsis,
     } = this.state.form;
     // console.log(this.state.form);
-    console.log(this.state);
+    // console.log(this.state);
 
     return (
       <>
