@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styles from "./MovieDetail.module.css";
 import NavBar from "../../../components/learning/NavBar";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
-import qs from "query-string";
+// import qs from "query-string";
 import Seat from "../../../components/learning/Seat/Seat";
 
 class MovieDetail extends Component {

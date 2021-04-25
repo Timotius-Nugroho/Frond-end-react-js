@@ -73,7 +73,7 @@ class Home extends Component {
     event.preventDefault();
     console.log("Save Data");
     console.log(this.state.form);
-    const { form } = this.state;
+    // const { form } = this.state;
     // proses request post movie
     // axios post movie
   };
