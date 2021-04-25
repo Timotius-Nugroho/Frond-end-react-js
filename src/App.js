@@ -21,6 +21,7 @@ class App extends Component {
             exact
             component={BasicMovieDetail}
           />
+          <Route path="/" exact component={Home} />
           <Route path="/main/home" exact component={Home} />
           <Route path="/main/movie-detail/:id" exact component={MovieDetail} />
           <Route path="/main/payment" exact component={Payment} />
