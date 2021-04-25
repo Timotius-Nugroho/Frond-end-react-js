@@ -98,7 +98,7 @@ class NavBarX extends Component {
               <Link className="ml-sm-5 mr-2" to="/main/payment">
                 <span className={styles.link}>Payment</span>
               </Link>
-              <Link className="ml-sm-5 mr-2" to="#">
+              <Link className="ml-sm-5 mr-2" to="/main/admin">
                 <span className={styles.link}>Profile</span>
               </Link>
             </Nav>
