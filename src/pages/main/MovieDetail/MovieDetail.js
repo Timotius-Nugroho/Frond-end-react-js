@@ -73,7 +73,7 @@ class MovieDetail extends Component {
 
   getDataPremiere = () => {
     const { movie_id } = this.state.data;
-    let { show_time_date, premiere_location } = this.state;
+    let { show_time_date, premiere_location, page, limit } = this.state;
     premiere_location = "%" + premiere_location + "%";
     show_time_date = "%" + show_time_date + "%";
     console.log(
@@ -86,47 +86,13 @@ class MovieDetail extends Component {
     );
     axiosApiIntances
       .get(
-        `premiere/premiere-movie/${movie_id}?date=${show_time_date}&loc=${premiere_location}`
+        `premiere/premiere-movie?loc=${premiere_location}&movieId=${movie_id}&limit=${limit}&page=${page}`
       )
       .then((res) => {
-        console.log("DATA DARI BACK END", res.data.data);
-        let preData = [];
-        let setData = {
-          preName: "",
-          preLoc: "",
-          prePrice: "",
-          showTime: [],
-        };
-        const dummySetData = setData;
-
-        if (res.data.data.length > 0) {
-          for (let item of res.data.data) {
-            if (
-              setData.preName === item.premiere_name &&
-              setData.preLoc === item.location_addres
-            ) {
-              console.log("skip data sama");
-              setData.showTime.push([item.show_time_clock, item.show_time_id]);
-            } else {
-              preData.push(setData);
-              setData = { ...setData, ...dummySetData };
-              setData.preName = item.premiere_name;
-              setData.preLoc = item.location_addres;
-              setData.prePrice = [item.premiere_price, item.premiere_id];
-              setData.showTime = [[item.show_time_clock, item.show_time_id]];
-            }
-          }
-          preData.shift();
-          preData.push(setData);
-          console.log("PREMIERE & SHOW-TIME", preData);
-          this.setState({
-            premiere_desc: preData,
-          });
-        } else {
-          this.setState({
-            premiere_desc: [],
-          });
-        }
+        // console.log("RES DARI BACK END", res.data.data);
+        this.setState({
+          premiere_desc: res.data.data,
+        });
       })
       .catch((err) => {
         console.log(err.response);

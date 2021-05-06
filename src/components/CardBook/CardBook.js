@@ -9,7 +9,7 @@ class Cards extends Component {
     super(props);
     this.state = {
       movieId: this.props.data[0],
-      premiereId: this.props.data[1].prePrice[1],
+      premiereId: this.props.data[1].premiere_id,
       showTimeId: false,
       selectedClock: "",
       show: false,
@@ -18,16 +18,16 @@ class Cards extends Component {
 
   handleClock = (clock) => {
     const { selectedClock } = this.state;
-    console.log(clock[0]);
-    if (selectedClock === clock[0]) {
+    console.log(clock.show_time_clock);
+    if (selectedClock === clock.show_time_clock) {
       this.setState({
         selectedClock: "",
         showTimeId: false,
       });
     } else {
       this.setState({
-        selectedClock: clock[0],
-        showTimeId: clock[1],
+        selectedClock: clock.show_time_clock,
+        showTimeId: clock.show_time_id,
       });
     }
   };
@@ -59,9 +59,15 @@ class Cards extends Component {
   };
 
   render() {
-    // console.log(this.props);
+    // console.log("PROPS", this.props);
     const { selectedClock, show } = this.state;
-    const { preName, preLoc, prePrice, showTime } = this.props.data[1];
+    const {
+      premiere_name,
+      location_city,
+      location_addres,
+      premiere_price,
+      showTime,
+    } = this.props.data[1];
     return (
       <>
         <Modal show={show} onHide={this.handleClose}>
@@ -81,8 +87,10 @@ class Cards extends Component {
                 <Image src={dummy} fluid />
               </div>
               <div>
-                <p className={styles.title}>{preName}</p>
-                <p className={styles.subTitle}>{preLoc}</p>
+                <p className={styles.title}>{premiere_name}</p>
+                <p
+                  className={styles.subTitle}
+                >{`${location_city}, ${location_addres}`}</p>
               </div>
             </div>
             <hr />
@@ -92,7 +100,7 @@ class Cards extends Component {
                   <div
                     key={i}
                     className={
-                      selectedClock === e[0]
+                      selectedClock === e.show_time_clock
                         ? styles.clockSelected
                         : styles.clock
                     }
@@ -100,7 +108,7 @@ class Cards extends Component {
                       this.handleClock(e);
                     }}
                   >
-                    {e[0]}
+                    {e.show_time_clock}
                   </div>
                 );
               })}
@@ -110,7 +118,7 @@ class Cards extends Component {
               <p className={styles.price}>Price</p>
               <p className={styles.priceValue}>
                 <span>$</span>
-                {prePrice[0]}
+                {premiere_price}
                 <span>/seat</span>
               </p>
             </div>

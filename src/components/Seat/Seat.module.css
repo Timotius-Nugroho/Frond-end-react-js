@@ -12,7 +12,6 @@
 
 .colSeat {
   padding: 3px 3px;
-  /* font-size: 10px; */
 }
 
 .label {
@@ -39,4 +38,25 @@
 
 .seatSold {
   background-color: #6e7191;
+}
+
+@media (max-width: 575.98px) {
+  .rowSeat {
+    margin-bottom: 5px;
+  }
+
+  .seatAlpabeth {
+    font-size: 8px;
+  }
+
+  .seat {
+    width: 10px;
+    height: 10px;
+    border-radius: 15%;
+  }
+
+  .seat:hover {
+    width: 15px;
+    height: 15px;
+  }
 }
