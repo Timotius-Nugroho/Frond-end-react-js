@@ -1,40 +1,35 @@
 const initialState = {
-  dataMovie: [],
-  pagination: {},
   isLoading: false,
   isError: false,
   msg: "",
 };
 
-const movie = (state = initialState, action) => {
+const update = (state = initialState, action) => {
   switch (action.type) {
-    case "GET_ALL_MOVIE_PENDING":
+    case "UPDATE_PENDING":
       return {
         ...state,
         isLoading: true,
         isError: false,
+        msg: "",
       };
-    case "GET_ALL_MOVIE_FULFILLED":
+    case "UPDATE_FULFILLED":
       return {
         ...state,
         isLoading: false,
         isError: false,
-        dataMovie: action.payload.data.data,
         msg: action.payload.data.msg,
-        pagination: action.payload.data.pagination,
       };
-    case "GET_ALL_MOVIE_REJECTED":
+    case "UPDATE_REJECTED":
       return {
         ...state,
         isLoading: false,
         isError: true,
-        data: [],
-        msg: action.payload.response.data.msg,
-        pagination: {},
+        msg: action.payload.data.msg,
       };
     default:
       return state;
   }
 };
 
-export default movie;
+export default update;

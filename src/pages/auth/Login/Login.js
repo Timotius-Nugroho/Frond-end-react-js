@@ -38,9 +38,9 @@ class Login extends Component {
       .then((res) => {
         // console.log("RES INI", res);
         // [1]
-        console.log("dari RES", res.value.data.data.token);
+        // console.log("dari RES", res.value.data.data.token);
         // [2]
-        console.log("TOKEN INI", this.props.auth.data.token);
+        // console.log("TOKEN INI", this.props.auth.data.token);
         // localStorage.setItem("token", this.props.auth.data.token);
         // this.props.history.push("/main/home");
       })

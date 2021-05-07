@@ -53,6 +53,15 @@ const auth = (state = initialState, action) => {
         data: {},
         msg: action.payload.response.data.msg,
       };
+    case "LOGOUT":
+      localStorage.clear();
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: {},
+        msg: "Succes Logout !",
+      };
     default:
       return state;
   }

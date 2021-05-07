@@ -18,6 +18,7 @@ import MovieDetail from "./pages/main/MovieDetail/MovieDetail";
 import Payment from "./pages/main/Payment/Payment";
 import Admin from "./pages/main/Admin/Admin";
 import Order from "./pages/main/Order/Order";
+import Profile from "./pages/main/Profile/Profile";
 
 class App extends Component {
   render() {
@@ -25,7 +26,12 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <Switch>
-            <Route path="/register" exact component={Register} />
+            <PublicRoute
+              restricted={true}
+              path="/register"
+              exact
+              component={Register}
+            />
             <PublicRoute
               restricted={true}
               path="/login"
@@ -58,6 +64,7 @@ class App extends Component {
             <Route path="/main/payment" exact component={Payment} />
             <Route path="/main/admin" exact component={Admin} />
             <Route path="/main/order" exact component={Order} />
+            <PrivateRoute path="/main/profile" exact component={Profile} />
           </Switch>
         </Router>
       </Provider>

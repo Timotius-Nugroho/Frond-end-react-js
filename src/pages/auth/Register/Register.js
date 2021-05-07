@@ -104,11 +104,14 @@ class Register extends Component {
             msg: res.value.data.msg,
             isShow: ["success", true],
           });
+          setTimeout(() => {
+            this.props.history.push("/login");
+          }, 3000);
         })
         .catch((err) => {
           // console.log("ERROR", err);
           this.setState({
-            msg: err.response.data.msg,
+            msg: "Error: " + err.response.data.msg,
             isShow: ["danger", true],
           });
         });
@@ -234,12 +237,6 @@ class Register extends Component {
                       <p className={styles.warning}>{msg}</p>
                     </Form.Control.Feedback>
                   </Form.Group>
-                  <Form.Group controlId="formBasicCheckbox">
-                    <Form.Check
-                      type="checkbox"
-                      label="I agree to terms & conditions"
-                    />
-                  </Form.Group>
                   <Button
                     variant="primary"
                     type="submit"
@@ -263,6 +260,9 @@ class Register extends Component {
                   <span
                     className={styles.resetBtn}
                     style={{ color: "#5F2EEA" }}
+                    onClick={() => {
+                      this.props.history.push("/login");
+                    }}
                   >
                     Log in
                   </span>
@@ -317,9 +317,6 @@ class Register extends Component {
   }
 }
 
-// const mapStateToProps = (state) => ({
-//   auth: state.auth,
-// });
 const mapDispatchToProps = { register };
 
 export default connect(null, mapDispatchToProps)(Register);

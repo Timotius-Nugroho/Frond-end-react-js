@@ -6,6 +6,8 @@ import Footer from "../../../components/Footer/Footer";
 import NavBar from "../../../components/NavBar/NavBarAdmin";
 import Card from "../../../components/CardCrud/CardCrud";
 import axiosApiIntances from "../../../utils/axios";
+import { connect } from "react-redux";
+import { getAllMovie } from "../../../redux/action/movie";
 import {
   Container,
   Form,
@@ -20,7 +22,7 @@ import {
 import styles from "./Admin.module.css";
 import dummy from "../../../assets/img/g9.png";
 
-class MovieDetail extends Component {
+class Admin extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -66,16 +68,25 @@ class MovieDetail extends Component {
     console.log("Get Data !");
     const { page, limit, sortBy, search } = this.state;
 
-    axiosApiIntances
-      .get(
-        `movie?page=${page}&limit=${limit}&keywords=${search}&sort=${sortBy}`
-      )
-      .then((res) => {
-        this.setState({ data: res.data.data, pagination: res.data.pagination });
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
+    // console.log("CARI FUNC", this.props);
+    this.props.getAllMovie(page, limit, sortBy, search);
+    //   .then((res) => {
+    //     console.log("Dari redux", res);
+    //   })
+    //   .catch((err) => {
+    //     console.log("Dari redux", err);
+    //   });
+
+    // axiosApiIntances
+    //   .get(
+    //     `movie?page=${page}&limit=${limit}&keywords=${search}&sort=${sortBy}`
+    //   )
+    //   .then((res) => {
+    //     this.setState({ data: res.data.data, pagination: res.data.pagination });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err.response);
+    //   });
   };
 
   postData = () => {
@@ -525,4 +536,10 @@ class MovieDetail extends Component {
   }
 }
 
-export default MovieDetail;
+const mapDispatchToProps = { getAllMovie };
+
+const mapStateToProps = (state) => ({
+  moive: state.movie,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Admin);

@@ -13,3 +13,9 @@ export const register = (data) => {
     payload: axiosApiIntances.post("auth/register", data),
   };
 };
+
+export const logout = (data) => {
+  return {
+    type: "LOGOUT",
+  };
+};
