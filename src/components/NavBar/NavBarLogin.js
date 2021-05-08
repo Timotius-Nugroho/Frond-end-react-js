@@ -26,7 +26,7 @@ class NavBarX extends Component {
             className="justify-content-between"
           >
             <Nav>
-              <Link className="ml-sm-5" to="/main/home">
+              <Link className="ml-sm-5" to="/">
                 {/* <Nav.Link href="#Home"> */}
                 <span className={styles.link}>Home</span>
                 {/* </Nav.Link> */}

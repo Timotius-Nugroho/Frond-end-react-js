@@ -13,21 +13,25 @@ import {
 import styles from "./Profile.module.css";
 import { connect } from "react-redux";
 import { updateProfile } from "../../../redux/action/updateProfile";
-import { logout } from "../../../redux/action/auth";
+import { logout, change } from "../../../redux/action/auth";
 
 class Profile extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    // console.log("PROPS DARI CONS", this.props);
+    const { user_name, user_email, user_phone_number } = this.props.auth.data;
     this.state = {
       form: {
-        firstName: "",
-        lastName: "",
-        userPhoneNumber: "",
+        firstName: user_name.split(" ")[0],
+        lastName: user_name.split(" ")[1],
+        userPhoneNumber: user_phone_number,
         image: null,
-        userEmail: "",
+        userEmail: user_email,
         userPassword: "",
-        CuserPassword: "",
+        confirmUserPassword: "",
       },
+      msgChangePass: "",
+      isShow: false,
     };
   }
 
@@ -48,9 +52,14 @@ class Profile extends Component {
       image,
       userEmail,
     } = this.state.form;
+    const { user_email } = this.props.auth.data;
 
     event.preventDefault();
     // console.log("FORM SIAP UPLOAD", this.state.form);
+
+    if (user_email !== userEmail) {
+      this.props.change({ userEmail: userEmail });
+    }
 
     const formData = new FormData();
     formData.append("firstName", firstName);
@@ -58,7 +67,6 @@ class Profile extends Component {
     formData.append("userPhoneNumber", userPhoneNumber);
     formData.append("image", image);
 
-    console.log("cari fungsi", this.props);
     this.props
       .updateProfile(formData)
       .then((res) => {
@@ -68,6 +76,9 @@ class Profile extends Component {
         console.log(err.response);
       })
       .finally(() => {
+        this.setState({
+          isShow: true,
+        });
         setTimeout(() => {
           // log out here
           this.props.logout();
@@ -82,8 +93,35 @@ class Profile extends Component {
 
   handleUpdatePassword = (event) => {
     event.preventDefault();
-    const { userPassword, CuserPassword } = this.state.form;
-    console.log("PASS", userPassword, CuserPassword);
+    const { userPassword, confirmUserPassword } = this.state.form;
+    console.log("PASS", userPassword, confirmUserPassword);
+    if (
+      userPassword !== confirmUserPassword ||
+      userPassword.length === 0 ||
+      confirmUserPassword === 0
+    ) {
+      this.setState({ msgChangePass: "Please recheck your confirm password" });
+    } else {
+      this.props
+        .change({ userPassword: userPassword })
+        .then((res) => {
+          console.log(res);
+          this.setState({
+            msgChangePass:
+              "Email verification for new password has been sent, please check your email !",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setTimeout(() => {
+            // log out here
+            this.props.logout();
+            this.props.history.push("/login");
+          }, 2000);
+        });
+    }
   };
 
   handleImage = (event) => {
@@ -98,8 +136,11 @@ class Profile extends Component {
   render() {
     const { firstName, lastName, userPhoneNumber, userEmail } = this.state.form;
     const { isError, msg } = this.props.update;
-    // console.log("STATE", this.state);
-    console.log("THIS PROPS", this.props);
+    const { user_profile_image } = this.props.auth.data;
+    const { isShow, msgChangePass } = this.state;
+
+    // console.log("PROPS", this.props);
+
     return (
       <>
         <NavBar />
@@ -110,12 +151,13 @@ class Profile extends Component {
                 <p className={styles.info}>INFO</p>
                 <div className="text-center">
                   <Image
-                    src="https://ps.w.org/ultimate-member/assets/icon-256x256.png?rev=2143339"
+                    src={`http://localhost:3001/api/${user_profile_image}`}
+                    alt="NO PROFILE"
                     style={{ width: "45%" }}
                     roundedCircle
                     className="mb-3"
                   />
-                  <p className={styles.name}>{`dari auth nanti`}</p>
+                  <p className={styles.name}>{`${firstName} ${lastName}`}</p>
                   <p className={styles.semi}>Moviegoers</p>
                 </div>
               </div>
@@ -199,7 +241,7 @@ class Profile extends Component {
                       <Alert className="mt-3" variant="danger">
                         {msg}
                       </Alert>
-                    ) : msg.length > 0 ? (
+                    ) : msg.length > 0 && isShow ? (
                       <Alert className="mt-3" variant="success">
                         {msg}
                       </Alert>
@@ -227,18 +269,25 @@ class Profile extends Component {
                         <Form.Label>Confirm Password</Form.Label>
                         <Form.Control
                           type="password"
-                          name="CuserPassword"
+                          name="confirmUserPassword"
                           placeholder="confirm your new password"
                           onChange={(event) => this.changeText(event)}
                         />
                       </Form.Group>
                     </Form.Row>
+                    {msgChangePass.length > 0 ? (
+                      <Alert className="mt-3" variant="warning">
+                        {msgChangePass}
+                      </Alert>
+                    ) : (
+                      ""
+                    )}
                     <Button
                       variant="primary"
                       type="submit"
                       className={`${styles.btUpdate} mt-3`}
                     >
-                      Update Changes
+                      Change Password
                     </Button>
                   </Form>
                 </div>
@@ -259,6 +308,6 @@ const mapStateToProps = (state) => ({
   update: state.updateProfile,
 });
 
-const mapDispatchToProps = { updateProfile, logout };
+const mapDispatchToProps = { updateProfile, logout, change };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

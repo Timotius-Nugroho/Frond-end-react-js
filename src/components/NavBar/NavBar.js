@@ -5,25 +5,24 @@ import { Nav, Navbar, Button, Image, Modal, Form } from "react-bootstrap";
 import logo from "../../assets/img/logo_1.png";
 import { Search } from "react-bootstrap-icons";
 import styles from "./NavBar.module.css";
-import axiosApiIntances from "../../utils/axios";
 import ReactPaginate from "react-paginate";
+import { connect } from "react-redux";
+import { logout } from "../../redux/action/auth";
+import { getAllMovie } from "../../redux/action/movie";
 
 class NavBarX extends Component {
   constructor(props) {
     super(props);
     this.state = {
       search: "",
-      data: [],
-      pagination: {},
       page: 1,
-      limit: 10,
+      limit: 5,
       isShow: false,
     };
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.search !== this.state.search) {
-      // console.log(this.state.search);
       this.getData(this.state.search);
     }
   }
@@ -31,14 +30,7 @@ class NavBarX extends Component {
   getData = (search) => {
     console.log("Get Data !, Search=", search);
     const { page, limit } = this.state;
-    axiosApiIntances
-      .get(`movie?page=${page}&limit=${limit}&keywords=%${search}%`)
-      .then((res) => {
-        this.setState({ data: res.data.data, pagination: res.data.pagination });
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
+    this.props.getAllMovie(page, limit, "movie_name ASC", "%" + search + "%");
   };
 
   changeText = (event) => {
@@ -71,9 +63,22 @@ class NavBarX extends Component {
     this.props.history.push(`/main/movie-detail/${id}`);
   };
 
+  handleLogin = () => {
+    this.props.history.push("/login");
+  };
+
+  handleLogout = () => {
+    console.log("LOGOUT");
+    this.props.logout();
+  };
+
   render() {
-    const { isShow, data } = this.state;
+    const { isShow } = this.state;
+    const { dataMovie, pagination } = this.props.movie;
+    const { data } = this.props.auth;
     // console.log(this.state.pagination.totalPage);
+    // console.log(this.props.auth);
+
     return (
       <>
         <Navbar
@@ -92,15 +97,22 @@ class NavBarX extends Component {
             className="justify-content-between"
           >
             <Nav>
-              <Link className="ml-sm-5 mr-2" to="/main/home">
+              <Link className="ml-sm-5 mr-2" to="/">
                 <span className={styles.link}>Home</span>
               </Link>
               <Link className="ml-sm-5 mr-2" to="/main/payment">
                 <span className={styles.link}>Payment</span>
               </Link>
-              <Link className="ml-sm-5 mr-2" to="/main/admin">
+              <Link className="ml-sm-5 mr-2" to="/main/profile">
                 <span className={styles.link}>Profile</span>
               </Link>
+              {data.user_role === "admin" ? (
+                <Link className="ml-sm-5 mr-2" to="/main/admin">
+                  <span className={styles.link}>Admin</span>
+                </Link>
+              ) : (
+                ""
+              )}
             </Nav>
             <Nav>
               <p className="mr-sm-4 mt-3">
@@ -126,7 +138,7 @@ class NavBarX extends Component {
                       />
                     </Form.Group>
                   </Form>
-                  {data.map((item, index) => {
+                  {dataMovie.map((item, index) => {
                     return (
                       <p
                         key={index}
@@ -144,11 +156,7 @@ class NavBarX extends Component {
                     nextLabel={"next"}
                     breakLabel={"..."}
                     breakClassName={"break-me"}
-                    pageCount={
-                      this.state.pagination.totalPage
-                        ? this.state.pagination.totalPage
-                        : 0
-                    }
+                    pageCount={pagination.totalPage ? pagination.totalPage : 0}
                     marginPagesDisplayed={5}
                     pageRangeDisplayed={5}
                     onPageChange={this.handlePageClick}
@@ -159,7 +167,30 @@ class NavBarX extends Component {
                 </div>
               </Modal>
               <div className="mr-sm-4 mt-2">
-                <Button className={(styles.link, styles.btNav)}>Sign Up</Button>
+                {Object.keys(data).length === 0 ? (
+                  <Button
+                    className={(styles.link, styles.btNav)}
+                    onClick={() => this.handleLogin()}
+                  >
+                    Login
+                  </Button>
+                ) : (
+                  <div className="d-flex flex-md-row flex-column">
+                    <div className="mr-sm-4 mt-0 mb-1">
+                      <Image
+                        src={`http://localhost:3001/api/${data.user_profile_image}`}
+                        roundedCircle
+                        style={{ width: "45px", height: "45px" }}
+                      />
+                    </div>
+                    <Button
+                      className={(styles.link, styles.btNav)}
+                      onClick={() => this.handleLogout()}
+                    >
+                      Log out
+                    </Button>
+                  </div>
+                )}
               </div>
             </Nav>
           </Navbar.Collapse>
@@ -169,4 +200,14 @@ class NavBarX extends Component {
   }
 }
 
-export default withRouter(NavBarX);
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  movie: state.movie,
+});
+
+const mapDispatchToProps = { logout, getAllMovie };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(NavBarX));

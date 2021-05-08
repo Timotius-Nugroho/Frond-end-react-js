@@ -41,8 +41,8 @@ class Login extends Component {
         // console.log("dari RES", res.value.data.data.token);
         // [2]
         // console.log("TOKEN INI", this.props.auth.data.token);
-        // localStorage.setItem("token", this.props.auth.data.token);
-        // this.props.history.push("/main/home");
+        localStorage.setItem("token", this.props.auth.data.token);
+        this.props.history.push("/");
       })
       .catch((err) => {
         console.log("ERROR RSP", err.response);
@@ -52,6 +52,10 @@ class Login extends Component {
           passwordValid: err.response.data.status === 400 ? "Invalid" : "valid",
         });
       });
+  };
+
+  handleRegister = () => {
+    this.props.history.push("/register");
   };
 
   render() {
@@ -130,8 +134,18 @@ class Login extends Component {
                     className={styles.resetBtn}
                     style={{ color: "#5F2EEA" }}
                   >
-                    Reset now
+                    Reset now,
                   </span>
+                  <p>
+                    <span>don't have an account? </span>
+                    <span
+                      className={styles.resetBtn}
+                      style={{ color: "#5F2EEA" }}
+                      onClick={() => this.handleRegister()}
+                    >
+                      Register now
+                    </span>
+                  </p>
                 </p>
                 <div className="d-flex flex-row justify-content-center mt-4 mb-5">
                   <div>

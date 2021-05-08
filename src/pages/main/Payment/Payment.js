@@ -76,7 +76,7 @@ class Payment extends Component {
         localStorage.removeItem("bookingInfo");
         setTimeout(() => {
           this.setState({ showModal: false });
-          this.props.history.push(`/main/home`);
+          this.props.history.push(`/`);
         }, 2000);
       })
       .catch((err) => {
@@ -121,7 +121,7 @@ class Payment extends Component {
         });
         setTimeout(() => {
           this.setState({ showModal: false });
-          this.props.history.push(`/main/home`);
+          this.props.history.push(`/`);
         }, 2000);
       } else {
         this.postBookingData(dataBook);

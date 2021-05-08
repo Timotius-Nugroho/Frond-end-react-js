@@ -53,6 +53,27 @@ const auth = (state = initialState, action) => {
         data: {},
         msg: action.payload.response.data.msg,
       };
+    case "CHANGE_PENDING": // prosesnya sedang berjalan
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+        msg: "",
+      };
+    case "CHANGE_FULFILLED": // ketika sukses
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        msg: action.payload.data.msg,
+      };
+    case "CHANGE_REJECTED": // ketika gagal
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        msg: action.payload.response.data.msg,
+      };
     case "LOGOUT":
       localStorage.clear();
       return {

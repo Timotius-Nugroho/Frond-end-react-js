@@ -1,13 +1,16 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
 import Footer from "../../../components/Footer/Footer";
 import NavBar from "../../../components/NavBar/NavBarAdmin";
 import Card from "../../../components/CardCrud/CardCrud";
-import axiosApiIntances from "../../../utils/axios";
 import { connect } from "react-redux";
-import { getAllMovie } from "../../../redux/action/movie";
+import {
+  getAllMovie,
+  updateMovie,
+  postMovie,
+  deleteMovie,
+} from "../../../redux/action/movie";
 import {
   Container,
   Form,
@@ -20,7 +23,7 @@ import {
   Modal,
 } from "react-bootstrap";
 import styles from "./Admin.module.css";
-import dummy from "../../../assets/img/g9.png";
+import dummy from "../../../assets/img/no_image.jpg";
 
 class Admin extends Component {
   constructor(props) {
@@ -29,7 +32,6 @@ class Admin extends Component {
       dropDownVal: "Sort By",
       sortBy: "movie_name ASC",
       search: "%%",
-      data: [],
       form: {
         movieName: "",
         movieCategory: "",
@@ -38,12 +40,13 @@ class Admin extends Component {
         movieDirectedBy: "",
         movieCasts: "",
         movieSynopsis: "",
+        movieImage: null,
+        image: null,
       },
       id: 0,
       show: false,
       modalMsg: "",
       isUpdate: false,
-      pagination: {},
       page: 1,
       limit: 4,
     };
@@ -62,37 +65,37 @@ class Admin extends Component {
         this.getData();
       });
     }
+
+    if (
+      prevState.search !== this.state.search ||
+      prevState.sortBy !== this.state.sortBy ||
+      prevState.page !== this.state.page
+    ) {
+      this.props.history.push(
+        `/main/admin?search=${this.state.search}&sortby=${this.state.sortBy}&page=${this.state.page}`
+      );
+    }
   }
 
   getData = () => {
     console.log("Get Data !");
     const { page, limit, sortBy, search } = this.state;
 
-    // console.log("CARI FUNC", this.props);
     this.props.getAllMovie(page, limit, sortBy, search);
-    //   .then((res) => {
-    //     console.log("Dari redux", res);
-    //   })
-    //   .catch((err) => {
-    //     console.log("Dari redux", err);
-    //   });
-
-    // axiosApiIntances
-    //   .get(
-    //     `movie?page=${page}&limit=${limit}&keywords=${search}&sort=${sortBy}`
-    //   )
-    //   .then((res) => {
-    //     this.setState({ data: res.data.data, pagination: res.data.pagination });
-    //   })
-    //   .catch((err) => {
-    //     console.log(err.response);
-    //   });
   };
-
   postData = () => {
     const { form } = this.state;
-    axiosApiIntances
-      .post("movie", form)
+    delete form.movieImage;
+    if (!form.image) {
+      delete form.image;
+    }
+    // console.log(form);
+    const formData = new FormData();
+    for (const key in form) {
+      formData.append(key, form[key]);
+    }
+    this.props
+      .postMovie(formData)
       .then((res) => {
         console.log(res);
         this.setState(
@@ -122,8 +125,20 @@ class Admin extends Component {
 
   updateData = () => {
     const { form, id } = this.state;
-    axiosApiIntances
-      .patch(`movie/${id}`, form)
+    delete form.movieImage;
+    if (!form.image) {
+      delete form.image;
+    }
+    // console.log("FROM OTW UPDATE", form, "+", id);
+    const formData = new FormData();
+    for (const key in form) {
+      formData.append(key, form[key]);
+    }
+    // for (var pair of formData.entries()) {
+    //   console.log(pair[0] + ", " + pair[1]);
+    // }
+    this.props
+      .updateMovie(id, formData)
       .then((res) => {
         console.log(res);
         this.setState(
@@ -194,6 +209,26 @@ class Admin extends Component {
     }
   };
 
+  handleImage = (event) => {
+    if (event.target.files[0]) {
+      this.setState({
+        form: {
+          ...this.state.form,
+          movieImage: URL.createObjectURL(event.target.files[0]),
+          image: event.target.files[0],
+        },
+      });
+    } else {
+      this.setState({
+        form: {
+          ...this.state.form,
+          movieImage: null,
+          image: null,
+        },
+      });
+    }
+  };
+
   handlePageClick = (event) => {
     const selectedPage = event.selected + 1;
     this.setState({ page: selectedPage }, () => {
@@ -205,6 +240,7 @@ class Admin extends Component {
   resetForm = () => {
     this.setState({
       form: {
+        ...this.state.form,
         movieName: "",
         movieCategory: "",
         movieReleaseDate: "",
@@ -241,14 +277,16 @@ class Admin extends Component {
         movieDirectedBy: data.movie_directed_by,
         movieCasts: data.movie_casts,
         movieSynopsis: data.movie_synopsis,
+        movieImage: `http://localhost:3001/api/${data.movie_image}`,
+        image: null,
       },
     });
   };
 
   deleteData = (id) => {
     console.log("Delete data ! ", id);
-    axiosApiIntances
-      .delete(`movie/${id}`)
+    this.props
+      .deleteMovie(id)
       .then((res) => {
         console.log(res);
         this.setState(
@@ -282,7 +320,7 @@ class Admin extends Component {
   };
 
   render() {
-    const { dropDownVal, isUpdate, data, show, modalMsg } = this.state;
+    const { dropDownVal, isUpdate, show, modalMsg } = this.state;
     const {
       movieName,
       movieCategory,
@@ -291,9 +329,12 @@ class Admin extends Component {
       movieDirectedBy,
       movieCasts,
       movieSynopsis,
+      movieImage,
     } = this.state.form;
     // console.log(this.state.form);
     // console.log(this.state);
+
+    const { dataMovie, pagination } = this.props.movie;
 
     return (
       <>
@@ -311,7 +352,7 @@ class Admin extends Component {
                 <Col lg={4}>
                   <Image
                     className={`${styles.hero} p-4 mb-4 d-block mx-auto`}
-                    src={dummy}
+                    src={movieImage ? movieImage : dummy}
                     fluid
                   />
                 </Col>
@@ -367,6 +408,12 @@ class Admin extends Component {
                           onChange={(event) => this.changeTextForm(event)}
                         />
                       </Col>
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.File
+                        label="Movie Image"
+                        onChange={(event) => this.handleImage(event)}
+                      />
                     </Form.Group>
                   </Form>
                 </Col>
@@ -451,27 +498,27 @@ class Admin extends Component {
                 >
                   <Dropdown.Item
                     className={styles.semi}
-                    eventKey="By Name ASC-movie_name ASC"
+                    eventKey="By Name A to Z-movie_name ASC"
                   >
-                    By Name ASC
+                    By Name A-Z
                   </Dropdown.Item>
                   <Dropdown.Item
                     className={styles.semi}
-                    eventKey="By Name DESC-movie_name DESC"
+                    eventKey="By Name Z to A-movie_name DESC"
                   >
-                    By Name DESC
+                    By Name Z-A
                   </Dropdown.Item>
                   <Dropdown.Item
                     className={styles.semi}
-                    eventKey="By Release Date ASC-movie_release_date ASC"
+                    eventKey="By Latest Release Date-movie_release_date ASC"
                   >
-                    By Release Date ASC
+                    By Latest Release Date
                   </Dropdown.Item>
                   <Dropdown.Item
                     className={styles.semi}
-                    eventKey="By Release Date DESC-movie_release_date DESC"
+                    eventKey="By Oldest Release Date-movie_release_date DESC"
                   >
-                    By Release Date DESC
+                    By Oldest Release Date
                   </Dropdown.Item>
                 </DropdownButton>
               </Col>
@@ -492,7 +539,7 @@ class Admin extends Component {
               className={`${styles.bgDiv} ${styles.semi} pt-5 pb-5 pl-4 pr-4`}
             >
               <Row>
-                {data.map((item, key) => {
+                {dataMovie.map((item, key) => {
                   return (
                     <Col lg={3} md={4} key={key} className="mb-2">
                       <Card
@@ -514,11 +561,7 @@ class Admin extends Component {
               nextLabel={"next"}
               breakLabel={"..."}
               breakClassName={"break-me"}
-              pageCount={
-                this.state.pagination.totalPage
-                  ? this.state.pagination.totalPage
-                  : 0
-              }
+              pageCount={pagination.totalPage ? pagination.totalPage : 0}
               marginPagesDisplayed={5}
               pageRangeDisplayed={5}
               onPageChange={this.handlePageClick}
@@ -536,10 +579,10 @@ class Admin extends Component {
   }
 }
 
-const mapDispatchToProps = { getAllMovie };
+const mapDispatchToProps = { getAllMovie, updateMovie, postMovie, deleteMovie };
 
 const mapStateToProps = (state) => ({
-  moive: state.movie,
+  movie: state.movie,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Admin);

@@ -33,7 +33,7 @@ axiosApiIntances.interceptors.response.use(
     // Do something with response error
     if (error.response.status === 403) {
       localStorage.clear();
-      alert("Please Login !");
+      alert("Please log in with a verified account !");
       window.location.href = "/login";
     }
     return Promise.reject(error);

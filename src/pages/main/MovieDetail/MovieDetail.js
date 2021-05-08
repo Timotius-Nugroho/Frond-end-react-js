@@ -4,7 +4,6 @@ import axiosApiIntances from "../../../utils/axios";
 import Footer from "../../../components/Footer/Footer";
 import { Container, Form, Row, Col, Image } from "react-bootstrap";
 import styles from "./MovieDetail.module.css";
-import dummy from "../../../assets/img/g9.png";
 import line from "../../../assets/img/line_long.png";
 import Cards from "../../../components/CardBook/CardBook";
 import NavBar from "../../../components/NavBar/NavBarLogin";
@@ -115,6 +114,7 @@ class MovieDetail extends Component {
       movie_directed_by,
       movie_casts,
       movie_synopsis,
+      movie_image,
     } = this.state.data;
 
     const { premiere_desc } = this.state;
@@ -129,7 +129,11 @@ class MovieDetail extends Component {
           <Row>
             <Col sm={3} className="mt-4">
               <div className={styles.hero}>
-                <Image className={`${styles.heroImg} p-4`} src={dummy} fluid />
+                <Image
+                  className={`${styles.heroImg} p-4`}
+                  src={`http://localhost:3001/api/${movie_image}`}
+                  fluid
+                />
               </div>
             </Col>
             <Col sm={9} className="mt-4">

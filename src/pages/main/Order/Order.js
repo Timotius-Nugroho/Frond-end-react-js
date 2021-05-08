@@ -195,7 +195,7 @@ class Home extends Component {
         >
           <p className={styles.textMovieBtn}>{movieName}</p>
           <Button className={styles.changeMovieBtn} variant="light">
-            <Link to="/main/home">Change movie</Link>
+            <Link to="/">Change movie</Link>
           </Button>
         </Container>
         <Container className={styles.bgCnt} fluid>
@@ -279,7 +279,7 @@ class Home extends Component {
                     className={`${styles.btPrevious} mb-3`}
                     variant="outline-primary"
                   >
-                    <Link to="/main/home">Change your Movie</Link>
+                    <Link to="/">Change your Movie</Link>
                   </Button>
                   <Button
                     className={styles.btPay}

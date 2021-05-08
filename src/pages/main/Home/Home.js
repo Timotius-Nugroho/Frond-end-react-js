@@ -6,7 +6,6 @@ import Cards from "../../../components/Card/Cards";
 import axiosApiIntances from "../../../utils/axios";
 import ReactPaginate from "react-paginate";
 import { Button, Image, Container, Row, Col, Form } from "react-bootstrap";
-import dummy from "../../../assets/img/g9.png";
 import line from "../../../assets/img/line.png";
 import hero1 from "../../../assets/img/g1.png";
 import hero2 from "../../../assets/img/g2.png";
@@ -128,7 +127,7 @@ class Home extends Component {
 
   render() {
     // console.log("DataMovUpcoming", typeof parseInt(this.state.limit));
-    // console.log("DataMovUpcoming", this.state.dataMovUpcoming);
+    console.log("DataMovUpcoming", this.state.dataMovUpcoming);
     // console.log("tmpDataMovUpcoming", this.state.tmpDataMovUpcoming);
     return (
       <>
@@ -195,7 +194,11 @@ class Home extends Component {
                         key={index}
                         onClick={() => this.handleBanner(item.movie_id)}
                       >
-                        <img className={styles.banner} src={dummy} alt="..." />
+                        <img
+                          className={styles.banner}
+                          src={`http://localhost:3001/api/${item.movie_image}`}
+                          alt="..."
+                        />
                       </div>
                     );
                   })}

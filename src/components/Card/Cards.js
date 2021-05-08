@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Button, Card } from "react-bootstrap";
+import { Button, Card, Image } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
-import dummy from "../../assets/img/g6.png";
 import styles from "./Cards.module.css";
 
 class Cards extends Component {
@@ -12,11 +11,20 @@ class Cards extends Component {
 
   render() {
     // console.log(this.props);
-    const { movie_id, movie_name, movie_category } = this.props.data;
+    const {
+      movie_id,
+      movie_name,
+      movie_category,
+      movie_image,
+    } = this.props.data;
     return (
       <>
         <Card style={{ width: "180px" }}>
-          <Card.Img variant="top" src={dummy} />
+          <Image
+            variant="top"
+            src={`http://localhost:3001/api/${movie_image}`}
+            style={{ width: "100%", height: "244px" }}
+          />
           <Card.Body className="text-center">
             <Card.Title className={styles.title}>{movie_name}</Card.Title>
             <Card.Text className={styles.category}>{movie_category}</Card.Text>

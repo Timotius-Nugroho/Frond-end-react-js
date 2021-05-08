@@ -14,6 +14,13 @@ export const register = (data) => {
   };
 };
 
+export const change = (data) => {
+  return {
+    type: "CHANGE",
+    payload: axiosApiIntances.post("auth/request-change", data),
+  };
+};
+
 export const logout = (data) => {
   return {
     type: "LOGOUT",

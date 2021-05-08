@@ -1,0 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish&display=swap");
+
+.bgCnt {
+  background-color: #e5e5e5;
+}
+
+.bgDiv {
+  background-color: white;
+}
+
+.dropDown {
+  width: 300px;
+  background-color: honeydew !important;
+}
