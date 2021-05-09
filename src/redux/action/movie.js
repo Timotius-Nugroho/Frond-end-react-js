@@ -29,3 +29,10 @@ export const deleteMovie = (id) => {
     payload: axiosApiIntances.delete(`movie/${id}`),
   };
 };
+
+export const getMovieName = () => {
+  return {
+    type: "MOVIE_NAME",
+    payload: axiosApiIntances.get("movie/name"),
+  };
+};

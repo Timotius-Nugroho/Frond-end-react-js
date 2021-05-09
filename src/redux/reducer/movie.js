@@ -29,7 +29,7 @@ const movie = (state = initialState, action) => {
         isLoading: false,
         isError: true,
         dataMovie: [],
-        msg: action.payload.response.data.msg,
+        msg: action.payload.data.msg,
         pagination: {},
       };
     case "UPDATE_MOVIE_PENDING":
@@ -50,7 +50,7 @@ const movie = (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: true,
-        msg: action.payload.response.data.msg,
+        msg: action.payload.data.msg,
       };
     case "POST_MOVIE_PENDING":
       return {
@@ -70,7 +70,7 @@ const movie = (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: true,
-        msg: action.payload.response.data.msg,
+        msg: action.payload.data.msg,
       };
     case "DELETE_MOVIE_PENDING":
       return {
@@ -90,7 +90,7 @@ const movie = (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: true,
-        msg: action.payload.response.data.msg,
+        msg: action.payload.data.msg,
       };
     default:
       return state;

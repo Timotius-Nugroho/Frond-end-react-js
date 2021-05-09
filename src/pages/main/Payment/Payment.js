@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // import { Link } from "react-router-dom";
 import Footer from "../../../components/Footer/Footer";
-import NavBar from "../../../components/NavBar/NavBarLogin";
+import NavBar from "../../../components/NavBar/NavBar";
 import axiosApiIntances from "../../../utils/axios";
 import {
   Container,
@@ -163,7 +163,7 @@ class Payment extends Component {
             <Modal.Title className={styles.modal}>{modalMsg}</Modal.Title>
           </Modal.Header>
         </Modal>
-        <NavBar />
+        <NavBar isAdminPage={false} />
         <Container className={styles.bgCnt} fluid>
           <Container className={`${styles.bgCnt} pt-5 pb-5`}>
             <div></div>

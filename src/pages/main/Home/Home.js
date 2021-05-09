@@ -131,7 +131,7 @@ class Home extends Component {
     // console.log("tmpDataMovUpcoming", this.state.tmpDataMovUpcoming);
     return (
       <>
-        <NavBar />
+        <NavBar isAdminPage={false} />
         <Container fluid>
           <Row className="mt-5">
             <Col className="text-center" lg={6}>

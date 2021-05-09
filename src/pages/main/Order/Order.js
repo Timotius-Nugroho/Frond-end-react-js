@@ -188,7 +188,7 @@ class Home extends Component {
             </Modal.Title>
           </Modal.Header>
         </Modal>
-        <NavBar />
+        <NavBar isAdminPage={false} />
         <Container
           className={`${styles.movieBtn} d-flex flex-row justify-content-between pl-5 pr-5 pt-3 pb-3`}
           fluid

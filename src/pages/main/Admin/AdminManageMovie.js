@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import moment from "moment";
 import ReactPaginate from "react-paginate";
 import Footer from "../../../components/Footer/Footer";
-import NavBar from "../../../components/NavBar/NavBarAdmin";
+import NavBar from "../../../components/NavBar/NavBar";
 import Card from "../../../components/CardCrud/CardCrud";
 import { connect } from "react-redux";
 import {
@@ -22,7 +22,7 @@ import {
   Dropdown,
   Modal,
 } from "react-bootstrap";
-import styles from "./Admin.module.css";
+import styles from "./AdminManageMovie.module.css";
 import dummy from "../../../assets/img/no_image.jpg";
 
 class Admin extends Component {
@@ -72,7 +72,7 @@ class Admin extends Component {
       prevState.page !== this.state.page
     ) {
       this.props.history.push(
-        `/main/admin?search=${this.state.search}&sortby=${this.state.sortBy}&page=${this.state.page}`
+        `/main/admin/manage-movie?search=${this.state.search}&sortby=${this.state.sortBy}&page=${this.state.page}`
       );
     }
   }
@@ -343,7 +343,7 @@ class Admin extends Component {
             <Modal.Title className={styles.modal}>{modalMsg}</Modal.Title>
           </Modal.Header>
         </Modal>
-        <NavBar />
+        <NavBar isAdminPage={true} />
         <Container className={`${styles.bgCnt} pt-5 pb-5`} fluid>
           <Container className={styles.bgCnt}>
             <p className={styles.title}>Movie Description</p>

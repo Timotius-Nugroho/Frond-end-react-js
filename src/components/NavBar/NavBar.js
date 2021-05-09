@@ -70,14 +70,16 @@ class NavBarX extends Component {
   handleLogout = () => {
     console.log("LOGOUT");
     this.props.logout();
+    this.props.history.push("/login");
   };
 
   render() {
     const { isShow } = this.state;
     const { dataMovie, pagination } = this.props.movie;
     const { data } = this.props.auth;
+    const { isAdminPage } = this.props;
     // console.log(this.state.pagination.totalPage);
-    // console.log(this.props.auth);
+    // console.log("ADMIN ", this.props.adminPage);
 
     return (
       <>
@@ -96,24 +98,42 @@ class NavBarX extends Component {
             id="responsive-navbar-nav"
             className="justify-content-between"
           >
-            <Nav>
-              <Link className="ml-sm-5 mr-2" to="/">
-                <span className={styles.link}>Home</span>
-              </Link>
-              <Link className="ml-sm-5 mr-2" to="/main/payment">
-                <span className={styles.link}>Payment</span>
-              </Link>
-              <Link className="ml-sm-5 mr-2" to="/main/profile">
-                <span className={styles.link}>Profile</span>
-              </Link>
-              {data.user_role === "admin" ? (
-                <Link className="ml-sm-5 mr-2" to="/main/admin">
-                  <span className={styles.link}>Admin</span>
+            {isAdminPage ? (
+              <Nav>
+                <Link className="ml-sm-5 mr-2" to="/">
+                  <span className={styles.link}>Home</span>
                 </Link>
-              ) : (
-                ""
-              )}
-            </Nav>
+                <Link className="ml-sm-5" to="/main/admin/dashboard">
+                  <span className={styles.link}>Dashboard</span>
+                </Link>
+                <Link className="ml-sm-5" to="/main/admin/manage-movie">
+                  <span className={styles.link}>Manage Movie</span>
+                </Link>
+                <Link className="ml-sm-5" to="#">
+                  <span className={styles.link}>Manage Schedule</span>
+                </Link>
+              </Nav>
+            ) : (
+              <Nav>
+                <Link className="ml-sm-5 mr-2" to="/">
+                  <span className={styles.link}>Home</span>
+                </Link>
+                <Link className="ml-sm-5 mr-2" to="/main/payment">
+                  <span className={styles.link}>Payment</span>
+                </Link>
+                <Link className="ml-sm-5 mr-2" to="/main/profile">
+                  <span className={styles.link}>Profile</span>
+                </Link>
+                {data.user_role === "admin" ? (
+                  <Link className="ml-sm-5 mr-2" to="/main/admin/manage-movie">
+                    <span className={styles.link}>Admin</span>
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </Nav>
+            )}
+
             <Nav>
               <p className="mr-sm-4 mt-3">
                 <span className={styles.link}>Location</span>

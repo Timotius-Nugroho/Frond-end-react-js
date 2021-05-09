@@ -6,7 +6,7 @@ import { Container, Form, Row, Col, Image } from "react-bootstrap";
 import styles from "./MovieDetail.module.css";
 import line from "../../../assets/img/line_long.png";
 import Cards from "../../../components/CardBook/CardBook";
-import NavBar from "../../../components/NavBar/NavBarLogin";
+import NavBar from "../../../components/NavBar/NavBar";
 
 class MovieDetail extends Component {
   constructor(props) {
@@ -124,7 +124,7 @@ class MovieDetail extends Component {
 
     return (
       <>
-        <NavBar />
+        <NavBar isAdminPage={false} />
         <Container className="mt-3">
           <Row>
             <Col sm={3} className="mt-4">

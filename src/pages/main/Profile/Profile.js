@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Footer from "../../../components/Footer/Footer";
-import NavBar from "../../../components/NavBar/NavBarLogin";
+import NavBar from "../../../components/NavBar/NavBar";
 import {
   Container,
   Form,
@@ -143,7 +143,7 @@ class Profile extends Component {
 
     return (
       <>
-        <NavBar />
+        <NavBar isAdminPage={false} />
         <Container className={`${styles.bgCnt} p-4`} fluid>
           <Row>
             <Col md={4}>
