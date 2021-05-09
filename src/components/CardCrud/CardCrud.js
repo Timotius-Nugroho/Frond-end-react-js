@@ -19,6 +19,7 @@ class Cards extends Component {
           <Card.Img
             variant="top"
             src={`http://localhost:3001/api/${movie_image}`}
+            className={styles.imgCard}
           />
           <Card.Body className="text-center">
             <Card.Title className={styles.title}>{movie_name}</Card.Title>

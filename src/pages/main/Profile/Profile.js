@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Footer from "../../../components/Footer/Footer";
 import NavBar from "../../../components/NavBar/NavBar";
+import Cards from "../../../components/CardOrderHistory/CardOrderHistory";
 import {
   Container,
   Form,
@@ -12,7 +13,7 @@ import {
 } from "react-bootstrap";
 import styles from "./Profile.module.css";
 import { connect } from "react-redux";
-import { updateProfile } from "../../../redux/action/updateProfile";
+import { updateProfile, getOrderHistory } from "../../../redux/action/user";
 import { logout, change } from "../../../redux/action/auth";
 
 class Profile extends Component {
@@ -32,7 +33,15 @@ class Profile extends Component {
       },
       msgChangePass: "",
       isShow: false,
+      navSet: true,
+      navOrder: false,
     };
+  }
+
+  componentDidMount() {
+    console.log("THISPROPS", this.props.auth.data.user_id);
+    const id = this.props.auth.data.user_id;
+    this.props.getOrderHistory(id);
   }
 
   changeText = (event) => {
@@ -133,13 +142,24 @@ class Profile extends Component {
     });
   };
 
+  handeNav = (event) => {
+    // console.log("clikc", event.target.name);
+    const name = event.target.name;
+    this.setState({
+      [name.split(" ")[0]]: true,
+      [name.split(" ")[1]]: false,
+    });
+  };
+
   render() {
     const { firstName, lastName, userPhoneNumber, userEmail } = this.state.form;
     const { isError, msg } = this.props.update;
     const { user_profile_image } = this.props.auth.data;
-    const { isShow, msgChangePass } = this.state;
+    const { isShow, msgChangePass, navSet, navOrder } = this.state;
+    const { dataOrder } = this.props.update;
 
     // console.log("PROPS", this.props);
+    // console.log("ORDER", dataOrder);
 
     return (
       <>
@@ -165,132 +185,158 @@ class Profile extends Component {
             <Col md={8}>
               <div className={`${styles.bgDiv} p-4`}>
                 <div className="d-flex flex-row">
-                  <p className={`${styles.info}`}>Account Settings</p>
-                  <p className={`${styles.info} ml-5`}>Order History</p>
+                  <Button
+                    className={`${styles.info} ${
+                      navSet ? styles.selectedNavMenu : styles.unselectedNavMenu
+                    }`}
+                    variant="light"
+                    name="navSet navOrder"
+                    onClick={(event) => this.handeNav(event)}
+                  >
+                    Account Settings
+                  </Button>
+                  <Button
+                    className={`${styles.info} ${
+                      navOrder
+                        ? styles.selectedNavMenu
+                        : styles.unselectedNavMenu
+                    } ml-5`}
+                    variant="light"
+                    name="navOrder navSet"
+                    onClick={(event) => this.handeNav(event)}
+                  >
+                    Order History
+                  </Button>
                 </div>
                 <hr />
-                <div>
-                  <p className={`${styles.info}`}>Details Information</p>
-                  <hr />
-                  <Form
-                    onSubmit={this.handleUpdateProfile}
-                    className={`${styles.form} mb-5`}
-                  >
-                    <Form.Row>
-                      <Form.Group as={Col}>
-                        <Form.Label>First Name</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="firstName"
-                          placeholder="your first name"
-                          value={firstName}
-                          onChange={(event) => this.changeText(event)}
-                        />
-                      </Form.Group>
-
-                      <Form.Group as={Col}>
-                        <Form.Label>Last Name</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="lastName"
-                          placeholder="your last name"
-                          value={lastName}
-                          onChange={(event) => this.changeText(event)}
-                        />
-                      </Form.Group>
-                    </Form.Row>
-
-                    <Form.Row>
-                      <Form.Group as={Col}>
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control
-                          type="email"
-                          name="userEmail"
-                          placeholder="your email"
-                          value={userEmail}
-                          onChange={(event) => this.changeText(event)}
-                        />
-                      </Form.Group>
-
-                      <Form.Group as={Col}>
-                        <Form.Label>Phone Number</Form.Label>
-                        <Form.Control
-                          type="text"
-                          name="userPhoneNumber"
-                          placeholder="your phone number"
-                          value={userPhoneNumber}
-                          onChange={(event) => this.changeText(event)}
-                        />
-                      </Form.Group>
-                    </Form.Row>
-                    <Form.Group>
-                      <Form.Label>Profile Picture</Form.Label>
-                      <Form.Control
-                        type="file"
-                        onChange={(event) => this.handleImage(event)}
-                      />
-                    </Form.Group>
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      className={`${styles.btUpdate} mt-3`}
+                {navSet ? (
+                  <div>
+                    <p className={`${styles.info}`}>Details Information</p>
+                    <hr />
+                    <Form
+                      onSubmit={this.handleUpdateProfile}
+                      className={`${styles.form} mb-5`}
                     >
-                      Update Changes
-                    </Button>
-                    {isError ? (
-                      <Alert className="mt-3" variant="danger">
-                        {msg}
-                      </Alert>
-                    ) : msg.length > 0 && isShow ? (
-                      <Alert className="mt-3" variant="success">
-                        {msg}
-                      </Alert>
-                    ) : (
-                      ""
-                    )}
-                  </Form>
-                  <p className={`${styles.info}`}>Account and Privacy</p>
-                  <hr />
-                  <Form
-                    onSubmit={this.handleUpdatePassword}
-                    className={styles.form}
-                  >
-                    <Form.Row>
-                      <Form.Group as={Col}>
-                        <Form.Label>New Password</Form.Label>
+                      <Form.Row>
+                        <Form.Group as={Col}>
+                          <Form.Label>First Name</Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="firstName"
+                            placeholder="your first name"
+                            value={firstName}
+                            onChange={(event) => this.changeText(event)}
+                          />
+                        </Form.Group>
+
+                        <Form.Group as={Col}>
+                          <Form.Label>Last Name</Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="lastName"
+                            placeholder="your last name"
+                            value={lastName}
+                            onChange={(event) => this.changeText(event)}
+                          />
+                        </Form.Group>
+                      </Form.Row>
+
+                      <Form.Row>
+                        <Form.Group as={Col}>
+                          <Form.Label>Email</Form.Label>
+                          <Form.Control
+                            type="email"
+                            name="userEmail"
+                            placeholder="your email"
+                            value={userEmail}
+                            onChange={(event) => this.changeText(event)}
+                          />
+                        </Form.Group>
+
+                        <Form.Group as={Col}>
+                          <Form.Label>Phone Number</Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="userPhoneNumber"
+                            placeholder="your phone number"
+                            value={userPhoneNumber}
+                            onChange={(event) => this.changeText(event)}
+                          />
+                        </Form.Group>
+                      </Form.Row>
+                      <Form.Group>
+                        <Form.Label>Profile Picture</Form.Label>
                         <Form.Control
-                          type="password"
-                          name="userPassword"
-                          placeholder="enter new password"
-                          onChange={(event) => this.changeText(event)}
+                          type="file"
+                          onChange={(event) => this.handleImage(event)}
                         />
                       </Form.Group>
-                      <Form.Group as={Col}>
-                        <Form.Label>Confirm Password</Form.Label>
-                        <Form.Control
-                          type="password"
-                          name="confirmUserPassword"
-                          placeholder="confirm your new password"
-                          onChange={(event) => this.changeText(event)}
-                        />
-                      </Form.Group>
-                    </Form.Row>
-                    {msgChangePass.length > 0 ? (
-                      <Alert className="mt-3" variant="warning">
-                        {msgChangePass}
-                      </Alert>
-                    ) : (
-                      ""
-                    )}
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      className={`${styles.btUpdate} mt-3`}
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        className={`${styles.btUpdate} mt-3`}
+                      >
+                        Update Changes
+                      </Button>
+                      {isError ? (
+                        <Alert className="mt-3" variant="danger">
+                          {msg}
+                        </Alert>
+                      ) : msg.length > 0 && isShow ? (
+                        <Alert className="mt-3" variant="success">
+                          {msg}
+                        </Alert>
+                      ) : (
+                        ""
+                      )}
+                    </Form>
+                    <p className={`${styles.info}`}>Account and Privacy</p>
+                    <hr />
+                    <Form
+                      onSubmit={this.handleUpdatePassword}
+                      className={styles.form}
                     >
-                      Change Password
-                    </Button>
-                  </Form>
-                </div>
+                      <Form.Row>
+                        <Form.Group as={Col}>
+                          <Form.Label>New Password</Form.Label>
+                          <Form.Control
+                            type="password"
+                            name="userPassword"
+                            placeholder="enter new password"
+                            onChange={(event) => this.changeText(event)}
+                          />
+                        </Form.Group>
+                        <Form.Group as={Col}>
+                          <Form.Label>Confirm Password</Form.Label>
+                          <Form.Control
+                            type="password"
+                            name="confirmUserPassword"
+                            placeholder="confirm your new password"
+                            onChange={(event) => this.changeText(event)}
+                          />
+                        </Form.Group>
+                      </Form.Row>
+                      {msgChangePass.length > 0 ? (
+                        <Alert className="mt-3" variant="warning">
+                          {msgChangePass}
+                        </Alert>
+                      ) : (
+                        ""
+                      )}
+                      <Button
+                        variant="primary"
+                        type="submit"
+                        className={`${styles.btUpdate} mt-3`}
+                      >
+                        Change Password
+                      </Button>
+                    </Form>
+                  </div>
+                ) : (
+                  dataOrder.map((item, index) => {
+                    return <Cards key={index} info={item} />;
+                  })
+                )}
               </div>
             </Col>
           </Row>
@@ -308,6 +354,6 @@ const mapStateToProps = (state) => ({
   update: state.updateProfile,
 });
 
-const mapDispatchToProps = { updateProfile, logout, change };
+const mapDispatchToProps = { updateProfile, getOrderHistory, logout, change };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

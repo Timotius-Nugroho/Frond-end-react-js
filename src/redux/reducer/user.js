@@ -2,6 +2,7 @@ const initialState = {
   isLoading: false,
   isError: false,
   msg: "",
+  dataOrder: [],
 };
 
 const update = (state = initialState, action) => {
@@ -26,6 +27,21 @@ const update = (state = initialState, action) => {
         isLoading: false,
         isError: true,
         msg: action.payload.data.msg,
+      };
+    case "ORDER_HISTORY_PENDING":
+      return {
+        ...state,
+        dataOrder: [],
+      };
+    case "ORDER_HISTORY_FULFILLED":
+      return {
+        ...state,
+        dataOrder: action.payload.data.data,
+      };
+    case "ORDER_HISTORY_REJECTED":
+      return {
+        ...state,
+        dataOrder: [],
       };
     default:
       return state;

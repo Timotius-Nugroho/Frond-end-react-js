@@ -17,7 +17,7 @@ import BasicRedux from "./pages/learning/BasicRedux/BasicRedux";
 import Home from "./pages/main/Home/Home";
 import MovieDetail from "./pages/main/MovieDetail/MovieDetail";
 import Payment from "./pages/main/Payment/Payment";
-import AdminManageMovie from "./pages/main/Admin/AdminManageMovie";
+import AdminManageMovie from "./pages/main/AdminManageMovie/AdminManageMovie";
 import AdminDashboard from "./pages/main/AdminDashboard/AdminDashboard";
 import Order from "./pages/main/Order/Order";
 import Profile from "./pages/main/Profile/Profile";

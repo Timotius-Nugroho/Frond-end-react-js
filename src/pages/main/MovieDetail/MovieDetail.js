@@ -129,11 +129,15 @@ class MovieDetail extends Component {
           <Row>
             <Col sm={3} className="mt-4">
               <div className={styles.hero}>
-                <Image
-                  className={`${styles.heroImg} p-4`}
-                  src={`http://localhost:3001/api/${movie_image}`}
-                  fluid
-                />
+                {movie_image ? (
+                  <Image
+                    className={`${styles.heroImg} p-4`}
+                    src={`http://localhost:3001/api/${movie_image}`}
+                    fluid
+                  />
+                ) : (
+                  ""
+                )}
               </div>
             </Col>
             <Col sm={9} className="mt-4">

@@ -6,3 +6,10 @@ export const updateProfile = (data) => {
     payload: axiosApiIntances.post("user", data),
   };
 };
+
+export const getOrderHistory = (id) => {
+  return {
+    type: "ORDER_HISTORY",
+    payload: axiosApiIntances.get(`booking/user-book?userId=${id}`),
+  };
+};

@@ -48,3 +48,9 @@
   background-color: red;
   border: solid red;
 }
+
+.imgCard {
+  width: 100%;
+  border-radius: 5px;
+  height: 275px;
+}
