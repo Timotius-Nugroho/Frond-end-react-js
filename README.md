@@ -1,6 +1,6 @@
 <h1 align='center'>React JS - TiketinAja Front-End</h1>
   <p align="center">
-    <a href="link_deploy">View Demo</a>
+    <a href="https://tiketinaja.netlify.app/">View Demo</a>
     ·
     <a href="https://github.com/Timotius-Nugroho/Frond-end-react-js/issues">Report Bug</a>
     ·
