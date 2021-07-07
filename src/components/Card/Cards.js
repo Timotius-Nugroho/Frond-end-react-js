@@ -11,18 +11,14 @@ class Cards extends Component {
 
   render() {
     // console.log(this.props);
-    const {
-      movie_id,
-      movie_name,
-      movie_category,
-      movie_image,
-    } = this.props.data;
+    const { movie_id, movie_name, movie_category, movie_image } =
+      this.props.data;
     return (
       <>
         <Card style={{ width: "180px" }}>
           <Image
             variant="top"
-            src={`http://localhost:3001/api/${movie_image}`}
+            src={`${process.env.REACT_APP_IMAGE_URL}${movie_image}`}
             style={{ width: "100%", height: "244px" }}
           />
           <Card.Body className="text-center">

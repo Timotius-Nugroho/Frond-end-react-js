@@ -57,6 +57,10 @@
   color: #fff;
 }
 .pagination > li > a {
+  border-radius: 6px;
+  margin-left: 3px;
+  margin-right: 3px;
+  padding: 5px 10px;
   border: 1px solid #5f2eea;
   padding: 5px 10px;
   outline: none;
@@ -70,6 +74,7 @@
 .pagination > .active > span:focus {
   background-color: #5f2eea;
   border-color: #5f2eea;
+  border-radius: 6px;
   outline: none;
 }
 .pagination > li > a,
@@ -80,5 +85,5 @@
 .pagination > li:first-child > span,
 .pagination > li:last-child > a,
 .pagination > li:last-child > span {
-  border-radius: unset;
+  border-radius: 6px;
 }

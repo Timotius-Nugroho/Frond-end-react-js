@@ -5,12 +5,8 @@ import styles from "./CardCrud.module.css";
 class Cards extends Component {
   render() {
     // console.log("PROPS DATA", this.props);
-    const {
-      movie_id,
-      movie_name,
-      movie_category,
-      movie_image,
-    } = this.props.data;
+    const { movie_id, movie_name, movie_category, movie_image } =
+      this.props.data;
     const { handleUpdate, handleDelete, data } = this.props;
 
     return (
@@ -18,7 +14,7 @@ class Cards extends Component {
         <Card style={{ width: "200px" }} className="mx-auto">
           <Card.Img
             variant="top"
-            src={`http://localhost:3001/api/${movie_image}`}
+            src={`${process.env.REACT_APP_IMAGE_URL}${movie_image}`}
             className={styles.imgCard}
           />
           <Card.Body className="text-center">

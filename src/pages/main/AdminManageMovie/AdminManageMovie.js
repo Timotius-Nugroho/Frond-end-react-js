@@ -277,7 +277,7 @@ class Admin extends Component {
         movieDirectedBy: data.movie_directed_by,
         movieCasts: data.movie_casts,
         movieSynopsis: data.movie_synopsis,
-        movieImage: `http://localhost:3001/api/${data.movie_image}`,
+        movieImage: `${process.env.REACT_APP_IMAGE_URL}${data.movie_image}`,
         image: null,
       },
     });

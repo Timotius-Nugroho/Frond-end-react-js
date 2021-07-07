@@ -6,12 +6,8 @@ import styles from "./CardOrderHistory.module.css";
 class Cards extends Component {
   render() {
     // console.log("this props", this.props);
-    const {
-      movie_name,
-      premiere_logo,
-      show_time_date,
-      show_time_clock,
-    } = this.props.info;
+    const { movie_name, premiere_logo, show_time_date, show_time_clock } =
+      this.props.info;
 
     return (
       <>
@@ -25,7 +21,9 @@ class Cards extends Component {
               <p className={styles.name}>{movie_name}</p>
             </div>
             <div>
-              <Image src={`http://localhost:3001/api/${premiere_logo}`} />
+              <Image
+                src={`${process.env.REACT_APP_IMAGE_URL}${premiere_logo}`}
+              />
             </div>
           </div>
           <hr />

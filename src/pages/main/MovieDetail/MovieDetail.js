@@ -132,7 +132,7 @@ class MovieDetail extends Component {
                 {movie_image ? (
                   <Image
                     className={`${styles.heroImg} p-4`}
-                    src={`http://localhost:3001/api/${movie_image}`}
+                    src={`${process.env.REACT_APP_IMAGE_URL}${movie_image}`}
                     fluid
                   />
                 ) : (

@@ -196,7 +196,7 @@ class Home extends Component {
                       >
                         <img
                           className={styles.banner}
-                          src={`http://localhost:3001/api/${item.movie_image}`}
+                          src={`${process.env.REACT_APP_IMAGE_URL}${item.movie_image}`}
                           alt="..."
                         />
                       </div>

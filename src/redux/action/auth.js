@@ -14,6 +14,13 @@ export const register = (data) => {
   };
 };
 
+export const getUser = () => {
+  return {
+    type: "GET_USER",
+    payload: axiosApiIntances.get("user"),
+  };
+};
+
 export const change = (data) => {
   return {
     type: "CHANGE",

@@ -28,7 +28,6 @@ class NavBarX extends Component {
   }
 
   getData = (search) => {
-    console.log("Get Data !, Search=", search);
     const { page, limit } = this.state;
     this.props.getAllMovie(page, limit, "movie_name ASC", "%" + search + "%");
   };
@@ -59,7 +58,6 @@ class NavBarX extends Component {
   };
 
   handleResSearch = (id) => {
-    console.log(id);
     this.props.history.push(`/main/movie-detail/${id}`);
   };
 
@@ -68,7 +66,6 @@ class NavBarX extends Component {
   };
 
   handleLogout = () => {
-    console.log("LOGOUT");
     this.props.logout();
     this.props.history.push("/login");
   };
@@ -78,8 +75,6 @@ class NavBarX extends Component {
     const { dataMovie, pagination } = this.props.movie;
     const { data } = this.props.auth;
     const { isAdminPage } = this.props;
-    // console.log(this.state.pagination.totalPage);
-    // console.log("ADMIN ", this.props.adminPage);
 
     return (
       <>
@@ -135,9 +130,6 @@ class NavBarX extends Component {
             )}
 
             <Nav>
-              <p className="mr-sm-4 mt-3">
-                <span className={styles.link}>Location</span>
-              </p>
               <div className="mr-sm-4 mt-3" onClick={this.handleShow}>
                 <Search className={styles.search} />
               </div>
@@ -198,7 +190,7 @@ class NavBarX extends Component {
                   <div className="d-flex flex-md-row flex-column">
                     <div className="mr-sm-4 mt-0 mb-1">
                       <Image
-                        src={`http://localhost:3001/api/${data.user_profile_image}`}
+                        src={`${process.env.REACT_APP_IMAGE_URL}${data.user_profile_image}`}
                         roundedCircle
                         style={{ width: "45px", height: "45px" }}
                       />

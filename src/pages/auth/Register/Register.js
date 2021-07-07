@@ -66,8 +66,7 @@ class Register extends Component {
         ? this.setState({ passwordValid: "valid" })
         : this.setState({
             passwordValid: "Invalid",
-            msg:
-              "should contain at least one digit, one lower case, one upper case and 8 characters long",
+            msg: "should contain at least one digit, one lower case, one upper case and 8 characters long",
           });
     }
     this.setState({
@@ -80,13 +79,8 @@ class Register extends Component {
 
   handleRegister = (event) => {
     event.preventDefault();
-    const {
-      firstNameValid,
-      phoneNumberValid,
-      passwordValid,
-      msg,
-      form,
-    } = this.state;
+    const { firstNameValid, phoneNumberValid, passwordValid, msg, form } =
+      this.state;
     const { register } = this.props;
 
     if (
@@ -140,7 +134,7 @@ class Register extends Component {
       <>
         <Container fluid>
           <Row>
-            <Col md={7}>
+            <Col className={styles.dissapear}>
               <div className={styles.left}>
                 <div className={`${styles.leftIn} p-5`}>
                   <Image src={logo} className={`${styles.logo} mb-5`} />
@@ -172,7 +166,12 @@ class Register extends Component {
             </Col>
             <Col md={5}>
               <div className="mx-auto p-4">
-                <h3 className="mt-5">Fill your additional details</h3>
+                <h3 className={`${styles.dissapear} mt-5`}>
+                  Fill your additional details
+                </h3>
+                <h3 className={`${styles.apear} mt-5`}>
+                  Lets build your account
+                </h3>
 
                 <Form onSubmit={this.handleRegister} className="mt-4">
                   <Form.Group>

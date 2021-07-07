@@ -30,6 +30,28 @@ const auth = (state = initialState, action) => {
         data: {},
         msg: action.payload.response.data.msg,
       };
+    case "GET_USER_PENDING": // prosesnya sedang berjalan
+      return {
+        ...state,
+        isLoading: true,
+        isError: false,
+        msg: "",
+      };
+    case "GET_USER_FULFILLED": // ketika sukses
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        data: { ...state.data, ...action.payload.data.data },
+        msg: action.payload.data.msg,
+      };
+    case "GET_USER_REJECTED": // ketika gagal
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        msg: action.payload.response.data.msg,
+      };
     case "REGISTER_PENDING": // prosesnya sedang berjalan
       return {
         ...state,

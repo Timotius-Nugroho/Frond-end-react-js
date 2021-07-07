@@ -3,6 +3,8 @@
 }
 
 .left {
+  margin-left: -15px;
+  margin-right: -15px;
   background: url("../../../assets/img/bg_2.png");
   background-repeat: no-repeat;
   background-size: cover;
@@ -57,4 +59,16 @@
 
 .line {
   width: 153px;
+}
+
+@media (min-width: 576px) {
+  .dissapear {
+    display: inline;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .dissapear {
+    display: none;
+  }
 }

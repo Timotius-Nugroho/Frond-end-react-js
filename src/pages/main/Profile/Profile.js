@@ -14,7 +14,7 @@ import {
 import styles from "./Profile.module.css";
 import { connect } from "react-redux";
 import { updateProfile, getOrderHistory } from "../../../redux/action/user";
-import { logout, change } from "../../../redux/action/auth";
+import { logout, change, getUser } from "../../../redux/action/auth";
 
 class Profile extends Component {
   constructor(props) {
@@ -54,17 +54,11 @@ class Profile extends Component {
   };
 
   handleUpdateProfile = (event) => {
-    const {
-      firstName,
-      lastName,
-      userPhoneNumber,
-      image,
-      userEmail,
-    } = this.state.form;
+    const { firstName, lastName, userPhoneNumber, image, userEmail } =
+      this.state.form;
     const { user_email } = this.props.auth.data;
 
     event.preventDefault();
-    // console.log("FORM SIAP UPLOAD", this.state.form);
 
     if (user_email !== userEmail) {
       this.props.change({ userEmail: userEmail });
@@ -74,12 +68,14 @@ class Profile extends Component {
     formData.append("firstName", firstName);
     formData.append("lastName", lastName);
     formData.append("userPhoneNumber", userPhoneNumber);
-    formData.append("image", image);
+    if (image) {
+      formData.append("image", image);
+    }
 
     this.props
       .updateProfile(formData)
       .then((res) => {
-        console.log("RES UPDATE", res);
+        this.props.getUser();
       })
       .catch((err) => {
         console.log(err.response);
@@ -89,10 +85,10 @@ class Profile extends Component {
           isShow: true,
         });
         setTimeout(() => {
-          // log out here
-          this.props.logout();
-          this.props.history.push("/login");
-        }, 2000);
+          this.setState({
+            isShow: false,
+          });
+        }, 3000);
       });
 
     // for (var pair of formData.entries()) {
@@ -103,7 +99,6 @@ class Profile extends Component {
   handleUpdatePassword = (event) => {
     event.preventDefault();
     const { userPassword, confirmUserPassword } = this.state.form;
-    console.log("PASS", userPassword, confirmUserPassword);
     if (
       userPassword !== confirmUserPassword ||
       userPassword.length === 0 ||
@@ -158,7 +153,7 @@ class Profile extends Component {
     const { isShow, msgChangePass, navSet, navOrder } = this.state;
     const { dataOrder } = this.props.update;
 
-    // console.log("PROPS", this.props);
+    console.log("PROPS", this.props);
     // console.log("ORDER", dataOrder);
 
     return (
@@ -171,7 +166,7 @@ class Profile extends Component {
                 <p className={styles.info}>INFO</p>
                 <div className="text-center">
                   <Image
-                    src={`http://localhost:3001/api/${user_profile_image}`}
+                    src={`${process.env.REACT_APP_IMAGE_URL}${user_profile_image}`}
                     alt="NO PROFILE"
                     style={{ width: "45%" }}
                     roundedCircle
@@ -333,9 +328,11 @@ class Profile extends Component {
                     </Form>
                   </div>
                 ) : (
-                  dataOrder.map((item, index) => {
-                    return <Cards key={index} info={item} />;
-                  })
+                  <div className="overflow-auto" style={{ height: "400px" }}>
+                    {dataOrder.map((item, index) => {
+                      return <Cards key={index} info={item} />;
+                    })}
+                  </div>
                 )}
               </div>
             </Col>
@@ -354,6 +351,12 @@ const mapStateToProps = (state) => ({
   update: state.updateProfile,
 });
 
-const mapDispatchToProps = { updateProfile, getOrderHistory, logout, change };
+const mapDispatchToProps = {
+  updateProfile,
+  getOrderHistory,
+  getUser,
+  logout,
+  change,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

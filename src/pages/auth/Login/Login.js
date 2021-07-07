@@ -32,16 +32,11 @@ class Login extends Component {
 
   handleLogin = (event) => {
     event.preventDefault();
-    console.log("STATE LOGIN JS", this.state.form);
     this.props
       .login(this.state.form)
       .then((res) => {
-        // console.log("RES INI", res);
-        // [1]
-        // console.log("dari RES", res.value.data.data.token);
-        // [2]
-        // console.log("TOKEN INI", this.props.auth.data.token);
         localStorage.setItem("token", this.props.auth.data.token);
+        localStorage.setItem("refreshToken", this.props.auth.data.refreshToken);
         this.props.history.push("/");
       })
       .catch((err) => {
@@ -59,21 +54,14 @@ class Login extends Component {
   };
 
   render() {
-    const {
-      userEmail,
-      userPassword,
-      emailValid,
-      passwordValid,
-      msg,
-    } = this.state;
-    console.log("PROPS INI", this.props);
-    console.log("STATE INI", this.state.msg);
+    const { userEmail, userPassword, emailValid, passwordValid, msg } =
+      this.state;
 
     return (
       <>
         <Container fluid>
           <Row>
-            <Col md={7}>
+            <Col className={styles.dissapear}>
               <div className={styles.left}>
                 <div className={styles.leftIn}>
                   <div className={`${styles.center}`}>
